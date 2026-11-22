@@ -1,0 +1,52 @@
+{
+  "slipknot": {
+    "x": 23,
+    "y": -6,
+    "scale": 100
+  },
+  "volver-al-futuro": {
+    "x": 12,
+    "y": 49,
+    "scale": 111
+  },
+  "metallica": {
+    "x": 39,
+    "y": -69,
+    "scale": 100
+  },
+  "led-zeppelin": {
+    "x": 16,
+    "y": -55,
+    "scale": 86
+  },
+  "black-sabbath": {
+    "x": 7,
+    "y": -84,
+    "scale": 100
+  },
+  "ac-dc": {
+    "x": 12,
+    "y": -84,
+    "scale": 87
+  },
+  "jurassic-park": {
+    "x": 12,
+    "y": -43,
+    "scale": 100
+  },
+  "megadeth": {
+    "x": 12,
+    "y": -58,
+    "scale": 100
+  },
+  "pink-floyd": {
+    "x": 11,
+    "y": -84,
+    "scale": 100
+  },
+  "pappo": {
+    "x": 15,
+    "y": -49,
+    "scale": 100
+  }
+}

@@ -1,0 +1,83 @@
+import { defaultAdjustment, type Adjustment } from './adjustments'
+
+const folder = import.meta.env.BASE_URL + 'assets/probador/'
+export const backdrop = folder + 'pared-probador-v0.10.0.webp'
+
+export type Pose = 'neutra' | 'mirada' | 'reaccion'
+export const modelIds = ['mujer', 'hombre'] as const
+export type ModelId = (typeof modelIds)[number]
+export type Frames = Record<Pose, string>
+
+type Zone = { x: number; y: number; width: number; height: number; rotation: number }
+type PrintPosition = 'centro' | 'pechoDerecho'
+type ModelArt = {
+  label: string
+  frames: Frames
+  portraitRatio: number
+  printZones: Record<PrintPosition, Zone>
+  chest: Omit<Zone, 'rotation'>
+}
+
+export const models: Record<ModelId, ModelArt> = {
+  mujer: {
+    label: 'Mujer',
+    frames: {
+      neutra: folder + 'modelo-neutra-v0.10.0.webp',
+      mirada: folder + 'modelo-mirada-v0.10.0.webp',
+      reaccion: folder + 'modelo-agarre-v0.14.0.webp',
+    },
+    portraitRatio: 520 / 738,
+    printZones: {
+      centro: { x: 28, y: 44, width: 44, height: 30, rotation: 0 },
+      pechoDerecho: { x: 32, y: 43, width: 13, height: 11, rotation: 0 },
+    },
+    chest: { x: 24, y: 42, width: 52, height: 37 },
+  },
+  hombre: {
+    label: 'Hombre',
+    frames: {
+      neutra: folder + 'hombre-neutra-v0.11.0.webp',
+      mirada: folder + 'hombre-mirada-v0.11.0.webp',
+      reaccion: folder + 'hombre-agarre-v0.14.0.webp',
+    },
+    portraitRatio: 560 / 738,
+    printZones: {
+      centro: { x: 28, y: 42, width: 44, height: 30, rotation: 0 },
+      pechoDerecho: { x: 32, y: 41, width: 13, height: 11, rotation: 0 },
+    },
+    chest: { x: 23, y: 40, width: 54, height: 39 },
+  },
+}
+
+const torsoOffsets: Record<Pose, number> = { neutra: 0, mirada: 0, reaccion: 0 }
+
+function slide(center: number, min: number, max: number, amount: number) {
+  const base = Math.max(min, Math.min(max, center))
+  return base + (amount / 100) * (amount < 0 ? base - min : max - base)
+}
+
+export function placement(
+  modelId: ModelId,
+  pose: Pose,
+  zone: PrintPosition = 'centro',
+  adjustment: Adjustment = defaultAdjustment,
+  artworkRatio?: number | null,
+): Zone {
+  const model = models[modelId]
+  const spec = model.printZones[zone]
+  const frameX = torsoOffsets[pose]
+  if (!artworkRatio) return { ...spec, x: spec.x + frameX }
+
+  const bounds = zone === 'centro' ? model.chest : spec
+  const ratio = artworkRatio / model.portraitRatio
+  const scale = adjustment.scale / 100
+  const width = Math.min(spec.width * scale, spec.height * scale * ratio, bounds.width, bounds.height * ratio)
+  const height = width / ratio
+  return {
+    x: frameX + slide(spec.x + (spec.width - width) / 2, bounds.x, bounds.x + bounds.width - width, adjustment.x),
+    y: slide(spec.y + (spec.height - height) / 2, bounds.y, bounds.y + bounds.height - height, adjustment.y),
+    width,
+    height,
+    rotation: spec.rotation,
+  }
+}

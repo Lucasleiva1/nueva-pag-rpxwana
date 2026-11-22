@@ -1,0 +1,112 @@
+# ROXWANA · Portada urbana · v0.11.0
+
+```sh
+npm ci
+npm run dev
+npm run build
+```
+
+La portada usa React, TypeScript, Vite y GSAP. En `src/heroAssets.ts` están las imágenes, las entradas y la profundidad de cada personaje. En `src/hero.css` se ajustan sus posiciones, tamaños y orden de capas en escritorio y móvil. Los carteles muestran un aviso de sección en preparación. Cuando existan las secciones, usar los identificadores de `NAV_ITEMS` para enlazarlas.
+
+La ciudad y la playa al anochecer son dos fotografías generadas de forma independiente. Sus entradas se definen en `heroAssets.ts` y sus cortes en `hero.css`. El papel superior está detrás de la marca y el inferior entra por delante del conjunto. Los PNG originales están en `arte` y las copias WebP en `public/assets`. El humo forma parte de la entrada y se disipa. El movimiento de puntero requiere un mouse y se desactiva con la preferencia de movimiento reducido.
+
+## Imágenes
+
+El sello y el monograma se extraen de `logo1.png`. Los recortes fotográficos a cuerpo entero son propuestas editables derivadas de `Trío rebelde en la pared urbana.png`. Las partes ocultas o fuera de cuadro se reconstruyen y requieren revisión de arte, especialmente los estampados.
+
+## Three.js
+
+Three.js y sus tipos están instalados. Para una futura escena, crear un módulo independiente y cargarlo con `import()` desde el punto que active esa escena. Conservar una alternativa estática, limitar el ratio de píxeles, pausar al perder visibilidad y liberar el renderer, geometrías, materiales, texturas y listeners al desmontar. La portada se compone en HTML y CSS con GSAP.
+
+## Prueba heavy metal
+
+Abrir `/?escena=metal` en el servidor local para revisar el trío metal con sus poses de referencia. Los PNG de cuerpo entero están en `arte`; las copias WebP viven en `public/assets`. La variante metal combina un recital con una ruta de gira recortada en diagonal y una calavera de serigrafía. Las dos fotos y la calavera tienen su archivo y su entrada. La URL principal abre la portada urbana.
+
+## Portada rap
+
+Abrir `/?escena=rap` para ver el trío rap. Cada personaje tiene un PNG maestro transparente y una copia WebP. El callejón grafiteado y la van de puerta corrediza son fondos separados. Sus posiciones y recortes están en `hero.css`.
+
+Los tres puntos del pie permiten cambiar entre Estilo urbano, Heavy metal y Rap. El punto relleno indica la portada activa.
+
+Las tres etiquetas de la portada enlazan a Descripción (`#descripcion`), Estampas (`#probador`) y Redes (`#redes`). Están disponibles en las tres variantes de Portada.
+
+## Profundidad 2.5D
+
+En escritorio, cada capa sigue el movimiento del mouse con la intensidad de `depth` en `src/heroAssets.ts`. Un valor negativo mueve el fondo en la dirección opuesta. GSAP separa el parallax de las animaciones de entrada. El menú y los puntos de navegación conservan su posición. El parallax está activo de forma predeterminada con mouse en escritorio. El control Movimiento 2.5D permite pausarlo. Los enlaces conservan esa elección mediante `movimiento=0`. El parallax no se activa con toque. Al entrar en cada escena, sus dos fondos y sus tres personajes se superponen en secuencia durante cerca de un segundo. Con movimiento reducido, la entrada usa desplazamientos más cortos. El control Movimiento 2.5D pausa tanto el parallax como las entradas siguientes.
+
+## Descripción
+
+La sección `#descripcion` aparece después de las tres variantes de Portada. Reutiliza el retrato de la modelo pelirroja y explica la personalización de remeras, la sublimación y el DTF. Su maquetación está en `src/Description.tsx` y `src/description.css`.
+
+
+## Movimiento en celular
+
+- En una portada, tocar **Activar movimiento**, aceptar el permiso si aparece y mantener el celular quieto durante la calibración. **Recalibrar** toma una nueva posición de referencia y **Desactivar movimiento** vuelve al control táctil.
+- Deslizar un dedo sobre los personajes permite probar el parallax táctil. Al soltar vuelven al centro. El gesto vertical conserva el scroll del navegador. **Pausar 2.5D** detiene el movimiento y se respeta al cambiar de portada.
+- Los fondos usan dos fotos más recortes de papel animados. Cada personaje tiene su capa. No hay un recorte separado de la mano, de modo que se mueve con el personaje. La salida con ScrollTrigger solo desplaza el fondo de Portada. Descripción permanece estática.
+- Abrir desde el teléfono una vista de desarrollo por HTTPS para probar el sensor. Para probar solo los gestos en la misma red, iniciar Vite con `npm run dev -- --host 0.0.0.0` y abrir la dirección de red que muestra Vite. En una URL HTTP de red, el sensor puede estar bloqueado, pero funciona el gesto táctil.
+- Ajustar `mobileDepth` y `delay` en `src/heroAssets.ts`, la sensibilidad en `src/deviceTilt.ts`, y los tamaños y áreas seguras en `src/hero.css` y `src/mobileHero.css`. La inclinación requiere autorización en navegadores que la solicitan. Con movimiento reducido, los gestos y el scroll quedan estáticos, y una activación explícita de inclinación usa un recorrido menor.
+
+
+## Probador de estampas
+
+Abrir `/#probador` para ver la modelo con la remera lisa y elegir los diseños. La sección usa tres fotogramas por modelo. Al elegir una estampa, el diseño anterior sigue visible hasta que el nuevo termina de cargar. El cambio es directo. El modelo baja la cabeza, toma la tela con ambas manos y vuelve a guardar las manos en los bolsillos. La preferencia de movimiento reducido conserva el cambio directo y omite esa reacción. La zona de impresión se fija con porcentajes respecto de la imagen y conserva el tamaño relativo al adaptar la pantalla.
+
+Estampas fuente: `E:/estampas-roxwana/Trabajos`. Para sumar una, ejecutar con Python y Pillow:
+
+```sh
+python scripts/importar_estampas.py --version 0.10.0 --estampa "Nombre del diseño" "E:/estampas-roxwana/Trabajos/carpeta/archivo.png"
+```
+
+El script verifica el alfa, recorta márgenes transparentes, conserva la proporción y guarda una copia de pantalla de hasta 640 px y una miniatura de hasta 160 px. Se pueden repetir los argumentos `--estampa` para importar varias de una vez. Vite detecta los archivos al compilar. Los archivos fuente `.ai` se exportan como PNG transparente antes de importarlos. Led Zeppelin y Pink Floyd se exportaron desde sus archivos de Illustrator. Para Jurassic Park se exportaron solo el título y el arte que estaban separados del mockup de la remera.
+
+Para ver las guías en desarrollo, abrir `/?calibrar=neutra#probador`. Los valores `mirada` y `reaccion` muestran las otras poses. `src/features/probador/artwork.ts` define las zonas. El selector usa `centro` y `pechoDerecho` queda preparada para una estampa chica en el pecho derecho de la modelo.
+
+
+En el servidor de desarrollo, **Ajustar estampa** permite variar el tamaño con el deslizador y mover el punto con el mouse, el dedo o las flechas del teclado. Cada diseño tiene sus propios ajustes. **Guardar** persiste todos los que se editaron en `src/features/probador/ajustes.json`, que se incluye al compilar la página pública. El panel aparece solo en desarrollo y el guardado se acepta solo en localhost. El recorrido tiene límites por tamaño y proporción, de modo que la estampa quede dentro del pecho.
+
+El selector **Mujer / Hombre** conserva la estampa activa. La URL `/?modelo=hombre#probador` abre el modelo masculino. Los ajustes se guardan por modelo en `ajustes.json` y `ajustes-hombre.json`.
+
+
+## Redes sociales · El muro social
+
+Recorrido de la página: Portada (`#portada`), Descripción (`#descripcion`), Probador (`#probador`) y Redes sociales (`#redes`). El muro reúne Producción, ROXWANA en la calle y En movimiento. Los afiches y la fila de íconos enlazan a los mismos perfiles. Los íconos conservan el orden Instagram, YouTube y TikTok, los círculos claros y los colores interactivos de la página anterior.
+
+Editar títulos, pies, textos alternativos, imágenes y destinos en `src/features/social/socialCards.ts`. Los tres WebP en `public/assets/social/` son recreaciones editoriales de los recortes de la página 2 del PDF. Los recortes del PDF se conservan en `arte/referencia-social-*-v0.12.0.webp`. Para reemplazar un afiche, guardar un WebP nuevo y actualizar su ruta y texto alternativo. Si cambia la proporción del material, ajustar el tamaño en `SocialWall.tsx`.
+
+Los papeles del muro, las cintas y los tres afiches tienen capas separadas. Los afiches entran escalonados al llegar con el scroll. En escritorio, el cursor desplaza cada afiche a su propia velocidad y el papel se desplaza en sentido contrario. En móvil, el carrusel usa el desplazamiento nativo con ajuste por tarjeta, botones anterior y siguiente, y contador. El desplazamiento vertical conserva su gesto y el carrusel no solicita el sensor de inclinación. La preferencia de movimiento reducido omite las animaciones. `?movimiento=0#redes` abre una vista sin entrada ni parallax. Los enlaces tienen foco visible y los WebP cargan de forma diferida.
+
+Las capturas de la versión 0.12.0 están en `arte/muro-social-escritorio-v0.12.0.png` y `arte/muro-social-movil-v0.12.0.png`.
+
+### Dirección de arte de las imágenes
+
+Las tres piezas se generaron con ImageGen integrado. Indicaciones usadas:
+
+1. Photorealistic editorial old-school underground streetwear zine page, a standalone image asset for ROXWANA's social section, inspired by torn poster walls. Near square horizontal 7:6, camera directly over a physical paste-up of black, dirty cream and several muted vermilion photographic prints. Worn textured torn paper poster fragments, a dominant genuinely documentary analog photograph of a screen-printing squeegee and a single worker's hands in a Buenos Aires T-shirt workshop, seated black graphic cotton garment, smaller gritty abstract halftone fragments of the studio and crop marks. Low key late afternoon natural side lighting, imperfect 35mm grain, believable paper textures and details, dynamic graphic framing with large calm dark patches. Sleek art direction like an independent fashion magazine, colors black cream restrained red. Full bleed artwork, no outer margin or border, no website/UI, no title, writing, artificial logos, watermark, plastic CGI, dramatic effects or neon.
+2. Standalone 7:6 landscape photograph of a physical magazine photo paste-up for Argentine indie streetwear brand ROXWANA's editorial social wall. The dominant photo features a real-looking twenty-something Buenos Aires streetwear woman in an off-white oversized T-shirt with a small abstract red and black graphic, silver hoops, dark hair in a messy ponytail, leaning against a concrete storefront looking off camera, quietly cool unforced attitude. Her face, natural skin, light freckles and garment realistically photographed, normal camera perspective 50mm, candid early evening soft flash and ambient side light, documentary style like a strong Instagram film photo. Layer on two smaller dark analog contact prints behind the main image, a walking streetwear man in black and a motion blurred city detail, plus one quiet red duotone strip. Real physical matte torn edges, inspiring magazine editorial negative space and restraint, black/tan/very muted oxblood palette with accurate skin colors. Full bleed paste-up, no graphic interface, lettering, brand marks, watermarks, beauty retouching, dramatic CGI or glossy advertising.
+3. Photorealistic standalone near-square landscape 7:6 asset, analog fashion magazine moodboard for an independent Argentine rock streetwear brand. Top-down photograph of three overlapping physical authentic-looking instant photos and one 35mm contact strip pinned on black charcoal paper. Large instant photo: candid side angle of a young adult in an oversized black graphic tee and dark jeans, walking past a concrete wall, direct snap flash, tasteful motion blur on the edges. Mid-size instant photo of a different adult in a slate-blue graphic tee turned away beside a music-show venue door. Small detail photo of aged cotton and a warm red monochrome print. Cropped off-white instant-photo margins, small worn tan masking tape pieces, a plain charcoal pencil line, photoreal physical contact shadows on paper. Art directed like an independent fashion magazine but real candid photography, imperfect film scans, restrained touches of oxblood and slate blue, no prominent words, logos, title, frame around the entire asset, photography of screens, graphics UI or watermark. The full composition must work at small web size.
+
+
+## Pie de página
+
+El pie `#pie` cierra la página después del Muro Social. Usa el sello original de ROXWANA, dos titulares de papel con la misma base que los botones de Portada, accesos a Instagram y TikTok y un enlace a `#portada`. El texto y los enlaces están en `src/features/footer/SiteFooter.tsx`. La maqueta se adapta a una composición vertical en móvil.
+
+El muro, el papel rojo, el guitarrista y los titulares son capas independientes. GSAP escalona la entrada y aplica distintos desplazamientos según el cursor. En móvil se puede arrastrar sobre la ilustración o activar la inclinación desde los controles del pie. Se usa el mismo ajuste de pausa que en Portada. La activación del sensor se hace en cada escena. Con movimiento reducido, la animación de entrada se omite y la inclinación activada manualmente tiene menor recorrido. El encuadre por encima de las rodillas se aplica en CSS.
+
+Los WebP `pared-urbana-v0.13.0.webp` y `guitarrista-v0.13.0.webp` se guardan en `public/assets/footer/`. La pared y el guitarrista transparente se generaron por separado con ImageGen integrado. Indicaciones de generación:
+
+1. Standalone widescreen 16:9 background artwork for an Argentine rock and streetwear website footer. A physical wall of layered torn underground concert-poster paper, black charcoal and faded warm ivory paper, xerox halftone textures and restrained saturated crimson ink streaks at the right corners. Photo collage of a worn Buenos Aires brutalist concrete urban building pushed to the far right edge, a tight naturally cropped vintage guitar amplifier at bottom right. The middle 65 percent is quiet deep charcoal charcoal paper with faint texture and no elements so separate typography cards can sit on it. Left dark with some grain for a separate guitarist cutout. Dense tactile scrapes and tears around the edges, a bold analogue punk zine look, photo-authentic grain, no gradients that look digital. Seamless edge-to-edge full bleed artwork, no hard framed edges, no layout panels, no people, no logo, no text or typography, no graphic interface. Cream and black dominate, crimson accents are concentrated at top right and along the lower edges.
+2. Generate one isolated transparent-background cutout on a tall portrait canvas, for a punk-rock streetwear website collage. A male rock guitarist with untamed wavy shoulder-length hair, late twenties, black worn plain oversized tee, standing in an expressive natural performance pose, chin up and head tilted slightly backward with eyes closed and wind in hair, playing a vintage solid-body electric guitar. His torso faces the camera from a slightly low analog-photo angle, neck of guitar pointing diagonally to the upper right. Include the entire head, both hands, the complete headstock and guitar body, his full figure down to his boots, with generous clean padding on every side; no hard bottom truncation. Style: physically believable 1970s gig photograph printed in coarse dark charcoal and warm cream halftone on rough zine paper, dense blacks, restrained amber cream, dramatically lit but authentic proportions. Fine slightly torn cream edge hugging only the silhouette, background must be genuinely transparent alpha on all sides, clear detached silhouette. No stage, no scenery, no cast shadow outside silhouette, no rectangle, no letters, no logos, no other objects.
+
+
+## WhatsApp
+
+El acceso fijo a WhatsApp acompaña el desplazamiento de toda la página. El destino de contacto se configura en `src/WhatsAppLink.tsx` y usa el número configurado en el proyecto anterior de ROXWANA.
+
+
+### Poses de agarre del probador
+
+Las poses se editaron con ImageGen integrado a partir de la foto de cada modelo mirando hacia abajo. Los recursos transparentes están en `public/assets/probador/modelo-agarre-v0.14.0.webp` y `public/assets/probador/hombre-agarre-v0.14.0.webp`. Las guías y posiciones guardadas se mantienen por modelo. Indicaciones de generación:
+
+1. Edit the attached cutout photograph of the adult female ROXWANA try-on model into ONE action frame of the very same person. This is an animation frame that must register with the reference: same centered frontal camera and crop, head at same position and tilt looking down at the shirt, same width of shoulders, necklace/clothes and tattoo, same lighting and purple rim, same waist and black-jeans crop at frame bottom, keep top margins. Change ONLY her arms and hands. Both hands are now completely out of her pockets, arms bent up, natural thumb and forefinger of each hand visibly gripping and slightly lifting the black tee fabric at the OUTER SIDE edges of the lower chest/upper abdomen, close to each side seam, just below the printing area. She studies the center of the tee with head down. Leave the central half-width of the T-shirt especially chest and stomach (x 26 to 74 percent of image) plain, smooth, black and uncovered by fingers for a digital print overlay. Make her elbows and wrists anatomically accurate, preserve black leather cuffs and left arm tattoo. Empty pockets. Exactly the same realistic photo, no lettering, logos, graphics or surroundings. Transparent background with real clean alpha, original vertical 520:738 framing, head through upper thighs, no floor and no thick glow around the edges.
+2. Edit the attached cutout photograph of the adult male ROXWANA try-on model into ONE action frame of the very same person. Frame must register with reference: identical vertical 560:738 composition, straight frontal camera, head kept looking down at the center of his shirt in the same position and size, same shoulder heights and centered torso scale, same hair, face, silver chain, dark plain black short sleeve shirt and black jeans cut off at upper thigh, authentic warm studio lighting, same existing arm tattoos and leather cuffs. Change ONLY both arms and hands. Both hands are now completely out of his pockets, elbows bent, natural thumb and forefinger of each hand visibly pinch and slightly tug the black tee at the OUTER SIDE EDGES of his upper abdomen, just below and outside the chest art area, around horizontal coordinates x 23% and 77%, vertical y 64%. Leave the central half of the black T-shirt totally empty smooth and clearly visible for a separately overlaid print, no hands over sternum, no designs or lettering. Photoreal, human joint anatomy, clean real alpha background with no cast shadow, preserve existing neutral photography of the model. Single cutout frame rather than storyboard, preserve original crop and margins.

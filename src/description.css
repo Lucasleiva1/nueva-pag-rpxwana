@@ -1,0 +1,158 @@
+.description {
+  --description-ink: #201815;
+  --description-red: #9f1a29;
+  --description-cream: #f1e3cd;
+  position: relative;
+  isolation: isolate;
+  overflow: clip;
+  color: var(--description-ink);
+  background: #e7d1b4 var(--description-paper) center / cover;
+}
+
+.description-frame {
+  position: relative;
+  z-index: 3;
+  display: grid;
+  grid-template-columns: minmax(0, .85fr) minmax(0, 1fr);
+  align-items: center;
+  width: min(100% - clamp(2.25rem, 8vw, 10.5rem), 104rem);
+  min-height: clamp(39rem, 88svh, 58rem);
+  margin-inline: auto;
+  padding-block: clamp(3rem, 7vw, 7rem);
+}
+
+.description-collage {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.description-collage::before,
+.description-collage::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+}
+
+.description-collage::before {
+  background: linear-gradient(124deg, #261d19e5, #120e0dd4 53%, #2a2423f0), var(--description-paper) center / cover;
+  clip-path: polygon(0 12%, 8% 8%, 12% 9%, 18% 6%, 29% 8%, 37% 5%, 43% 7%, 61% 5%, 56% 24%, 53% 26%, 48% 44%, 45% 48%, 39% 58%, 21% 56%, 17% 59%, 6% 59%, 0 63%);
+}
+
+.description-collage::after {
+  background: linear-gradient(140deg, #b91830db, #7b1022e8), var(--description-paper) center 70% / cover;
+  clip-path: polygon(0 71%, 10% 68%, 20% 61%, 24% 61%, 29% 57%, 38% 52%, 43% 49%, 57% 39%, 48% 58%, 43% 65%, 41% 83%, 42% 87%, 40% 100%, 0 100%);
+}
+
+.description-visual {
+  position: absolute;
+  inset: 0 auto 0 0;
+  z-index: 2;
+  width: 61%;
+  pointer-events: none;
+}
+
+.description-portrait {
+  position: absolute;
+  top: 2%;
+  left: 49%;
+  width: 87%;
+  height: 178%;
+  object-fit: contain;
+  object-position: center top;
+  transform: translateX(-50%);
+  filter: drop-shadow(4px 8px 12px #1f120f65);
+}
+
+.description-copy { grid-column: 2; min-width: 0; }
+.description-masthead {
+  display: flex;
+  align-items: center;
+  gap: .7rem;
+  width: max-content;
+  max-width: 100%;
+  margin-bottom: clamp(1.2rem, 2vw, 2.15rem);
+  padding: .38rem .65rem;
+}
+.description-masthead img {
+  width: 2.45rem;
+  height: auto;
+  filter: drop-shadow(0 1px 0 var(--description-cream)) drop-shadow(0 -1px 0 var(--description-cream));
+}
+.description-masthead span {
+  border-left: 1px solid #2018156b;
+  padding-left: .65rem;
+  font-size: .75rem;
+  font-weight: 700;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  text-shadow: 1px 0 var(--description-cream), -1px 0 var(--description-cream),
+    0 1px var(--description-cream), 0 -1px var(--description-cream);
+}
+
+.description h2 {
+  margin: 0 0 .27em;
+  position: relative;
+  font: italic 900 clamp(3.3rem, 7.05vw, 9.1rem) / .83 "Barlow Condensed", Impact, sans-serif;
+  letter-spacing: -.025em;
+  text-transform: uppercase;
+  text-shadow: 1px 0 var(--description-cream), -1px 0 var(--description-cream),
+    0 1px var(--description-cream), 0 -1px var(--description-cream);
+}
+
+.description h2 span {
+  display: block;
+  width: max-content;
+  max-width: 100%;
+  -webkit-text-stroke: .038em var(--description-cream);
+  paint-order: stroke fill;
+}
+.description h2 span:first-child { margin-bottom: .07em; }
+.description h2 span:last-child {
+  font-size: .86em;
+  color: var(--description-red);
+}
+
+.description-technique {
+  width: max-content;
+  max-width: 100%;
+  margin: 0 0 clamp(1.3rem, 2.4vw, 2.45rem);
+  color: var(--description-red);
+  -webkit-text-stroke: .045em var(--description-cream);
+  paint-order: stroke fill;
+  font: italic 900 clamp(1.9rem, 3.6vw, 4rem) / 1 "Barlow Condensed", Impact, sans-serif;
+}
+
+.description-body {
+  max-width: 39rem;
+  border-left: .24rem solid var(--description-red);
+  padding-left: clamp(.84rem, 1.65vw, 1.6rem);
+  font-size: clamp(1rem, 1.4vw, 1.31rem);
+  font-weight: 500;
+  line-height: 1.5;
+}
+.description-body h3 {
+  margin: 0 0 .36em;
+  font: italic 900 clamp(1.65rem, 3vw, 3.35rem) / .98 "Barlow Condensed", Impact, sans-serif;
+}
+.description-body p + p { margin-top: .66em; }
+
+@media (max-width: 850px) {
+  .description-frame {
+    display: block;
+    width: min(100% - 2.5rem, 37rem);
+    min-height: 0;
+    padding-block: 1.5rem 3.2rem;
+  }
+  .description-visual { inset: 3rem 0 auto; width: 100%; height: clamp(16.3rem, 73vw, 25rem); overflow: clip; }
+  .description-portrait { top: 0; left: 50%; width: 86%; height: 186%; }
+  .description-masthead { margin-left: auto; margin-bottom: clamp(12.1rem, 60vw, 21.2rem); }
+  .description h2 { font-size: clamp(2.1rem, 12.6vw, 6.8rem); }
+  .description h2 span:last-child { font-size: .85em; }
+  .description-collage::before {
+    clip-path: polygon(0 0, 85% 3%, 79% 16%, 76% 19%, 58% 33%, 54% 34%, 48% 41%, 0 43%);
+  }
+  .description-collage::after {
+    clip-path: polygon(0 32%, 16% 33%, 32% 28%, 47% 26%, 67% 16%, 89% 12%, 69% 34%, 60% 47%, 37% 49%, 0 53%);
+  }
+}

@@ -1,0 +1,47 @@
+{
+  "led-zeppelin": {
+    "x": 4,
+    "y": -55,
+    "scale": 74
+  },
+  "black-sabbath": {
+    "x": 9,
+    "y": -81,
+    "scale": 94
+  },
+  "metallica": {
+    "x": 13,
+    "y": -72,
+    "scale": 100
+  },
+  "pink-floyd": {
+    "x": 8,
+    "y": -58,
+    "scale": 100
+  },
+  "pantera": {
+    "x": 8,
+    "y": -52,
+    "scale": 100
+  },
+  "megadeth": {
+    "x": 2,
+    "y": -75,
+    "scale": 100
+  },
+  "jurassic-park": {
+    "x": 4,
+    "y": -32,
+    "scale": 100
+  },
+  "ac-dc": {
+    "x": 11,
+    "y": -90,
+    "scale": 68
+  },
+  "slipknot": {
+    "x": 3,
+    "y": -69,
+    "scale": 100
+  }
+}

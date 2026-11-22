@@ -1,0 +1,368 @@
+.social-wall {
+  --social-ink: #27221e;
+  --social-paper: #e9e1d5;
+  --social-gutter: clamp(20px, 7vw, 104px);
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  align-content: center;
+  min-block-size: 100svh;
+  overflow: clip;
+  padding-block: clamp(60px, 7vw, 106px);
+  color: var(--social-ink);
+  background: radial-gradient(ellipse at 48% 0%, #f7f2e9, transparent 70%), var(--social-paper);
+}
+
+.social-wall::before {
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  content: '';
+  pointer-events: none;
+  background: repeating-linear-gradient(177deg, transparent 0 6px, #3c302713 7px, transparent 8px 13px);
+  opacity: .27;
+}
+
+.social-wall__header {
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding-inline: var(--social-gutter);
+}
+
+.social-wall__papers {
+  position: absolute;
+  inset: -15px;
+  z-index: -1;
+  pointer-events: none;
+}
+
+.social-wall__papers span {
+  position: absolute;
+  display: block;
+  background: #d4c9b8;
+}
+
+.social-wall__papers span:first-child {
+  inset: 34% 39% 12% 0;
+  opacity: .46;
+  clip-path: polygon(0 8%, 76% 0, 78% 2%, 100% 0, 83% 92%, 0 100%);
+}
+
+.social-wall__papers span:last-child {
+  inset: 22% 0 16% 54%;
+  background: #c9b9a5;
+  opacity: .36;
+  clip-path: polygon(26% 5%, 70% 0%, 73% 2%, 100% 0, 100% 94%, 3% 100%);
+}
+
+.social-wall__eyebrow {
+  width: fit-content;
+  padding-bottom: 7px;
+  border-bottom: 2px solid #99332f;
+  font-size: .88rem;
+  font-weight: 700;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+}
+
+.social-wall__header h2 {
+  margin: .12em 0 .28em;
+  color: inherit;
+  font: italic 900 clamp(4rem, 9vw, 9rem)/.86 'Barlow Condensed', sans-serif;
+  text-transform: uppercase;
+}
+
+.social-wall__strip {
+  display: grid;
+  align-items: start;
+  grid-template-columns: 1fr 1.07fr .96fr;
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 32px var(--social-gutter) 34px;
+  list-style: none;
+}
+
+.social-wall__card {
+  --angle: -4deg;
+  --offset: 26px;
+  --overlap: clamp(-25px, -1.6vw, -12px);
+  min-width: 0;
+  position: relative;
+}
+
+.social-wall__card:nth-child(2) {
+  --angle: 1.5deg;
+  --offset: 0px;
+  z-index: 1;
+  margin-inline: var(--overlap);
+}
+
+.social-wall__card:nth-child(3) {
+  --angle: 4deg;
+  --offset: 32px;
+}
+
+.social-wall__card:focus-within,
+.social-wall__card:hover {
+  z-index: 2;
+}
+
+.social-wall__poster {
+  display: block;
+  position: relative;
+  padding: 9px 9px 0;
+  background: #f5eee2;
+  color: inherit;
+  text-decoration: none;
+  box-shadow: 0 12px 28px #29201833, 0 2px 5px #29201832;
+  transform: translateY(var(--offset)) rotate(var(--angle));
+  transition: transform .24s ease, box-shadow .24s ease;
+}
+
+.social-wall__poster:focus-visible,
+.social-wall__controls button:focus-visible {
+  outline: 3px solid #96372e;
+  outline-offset: 5px;
+}
+
+@media (hover: hover) {
+  .social-wall__poster:hover,
+  .social-wall__poster:focus-visible {
+    transform: translateY(calc(var(--offset) - 7px)) rotate(var(--angle)) scale(1.025);
+    box-shadow: 0 20px 36px #29201846;
+  }
+}
+
+.social-wall__tape {
+  position: absolute;
+  z-index: 1;
+  top: -10px;
+  left: 36%;
+  width: 28%;
+  height: 23px;
+  background: #bdad8bc9;
+  clip-path: polygon(1% 7%, 98% 0%, 96% 24%, 100% 40%, 97% 61%, 99% 98%, 0 94%, 3% 62%, 0 40%);
+  transform: rotate(-5deg);
+  pointer-events: none;
+}
+
+.social-wall__card:nth-child(2) .social-wall__tape {
+  left: 53%;
+  transform: rotate(6deg);
+}
+
+.social-wall__poster img {
+  display: block;
+  width: 100%;
+  height: auto;
+  background: #34312f;
+}
+
+.social-wall__caption {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 10px 7px 13px;
+}
+
+.social-wall__caption h3 {
+  margin: 0;
+  font: italic 900 clamp(1.2rem, 2vw, 2.2rem)/1 'Barlow Condensed', sans-serif;
+  text-transform: uppercase;
+}
+
+.social-wall__caption p {
+  margin: 5px 0 0;
+  font-size: .9rem;
+}
+
+.social-wall__network {
+  white-space: nowrap;
+  color: #78302b;
+  font-size: .83rem;
+  font-weight: 700;
+}
+
+.social-wall__controls {
+  display: none;
+}
+
+@media (width > 900px) {
+  .social-wall__card:first-child .social-wall__caption {
+    padding-right: clamp(25px, 2.8vw, 53px);
+  }
+
+  .social-wall__card:last-child .social-wall__caption {
+    padding-left: clamp(25px, 2.8vw, 53px);
+  }
+}
+
+@media (max-width: 900px) {
+  .social-wall {
+    --social-gutter: clamp(20px, 6vw, 44px);
+    padding-block: 54px 32px;
+  }
+
+  .social-wall__strip {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: var(--social-gutter);
+    padding-block: 25px 22px;
+    scrollbar-width: none;
+  }
+
+  .social-wall__strip::-webkit-scrollbar {
+    display: none;
+  }
+
+  .social-wall__card,
+  .social-wall__card:nth-child(n) {
+    --angle: 0deg;
+    --offset: 0px;
+    margin: 0;
+    flex: 0 0 min(76vw, 460px);
+    scroll-snap-align: start;
+  }
+
+  .social-wall__strip::after {
+    content: '';
+    flex: 0 0 max(0px, calc(100vw - min(76vw, 460px) - var(--social-gutter) * 2 - 15px));
+  }
+
+  .social-wall__caption h3 {
+    font-size: clamp(1.28rem, 5vw, 1.8rem);
+  }
+
+  .social-wall__controls {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    font-weight: 700;
+  }
+
+  .social-wall__controls button {
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    border: 1px solid #695a4f;
+    background: #f5eee2;
+    color: var(--social-ink);
+    font: inherit;
+    font-size: 1.6rem;
+    cursor: pointer;
+  }
+
+  .social-wall__controls button:disabled {
+    opacity: .44;
+    cursor: default;
+  }
+
+  .social-wall__controls span {
+    min-width: 3em;
+    text-align: center;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .social-wall__poster {
+    transition: none;
+  }
+
+  .social-wall__poster:hover,
+  .social-wall__poster:focus-visible {
+    transform: translateY(var(--offset)) rotate(var(--angle));
+  }
+}
+
+.social-wall__profiles {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  margin-top: 32px;
+}
+
+.social-wall__profile {
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  width: 56px;
+  height: 56px;
+  place-items: center;
+  border: 1px solid rgb(8 8 8 / 28%);
+  border-radius: 50%;
+  background: #f6f3ee;
+  color: #080808;
+  touch-action: manipulation;
+  transition:
+    transform 260ms cubic-bezier(.2, .8, .2, 1),
+    border-color 260ms ease,
+    color 260ms ease,
+    background 260ms ease,
+    box-shadow 260ms ease;
+}
+
+.social-wall__profile::before {
+  position: absolute;
+  inset: -4px;
+  z-index: -1;
+  border-radius: inherit;
+  background: var(--profile-background);
+  filter: blur(10px);
+  opacity: 0;
+  transform: scale(.82);
+  transition: opacity 260ms ease, transform 260ms ease;
+  pointer-events: none;
+  content: '';
+}
+
+.social-wall__profile:is(:hover, :focus-visible) {
+  transform: translateY(-3px) scale(1.04);
+  border-color: var(--profile-accent);
+  background: var(--profile-background);
+  color: #fff;
+  box-shadow: 0 10px 24px color-mix(in srgb, var(--profile-accent) 34%, transparent);
+}
+
+.social-wall__profile:is(:hover, :focus-visible)::before {
+  opacity: .42;
+  transform: scale(1);
+}
+
+.social-wall__profile:focus-visible {
+  outline: 3px solid var(--social-ink);
+  outline-offset: 4px;
+}
+
+.social-wall__profile[data-network='Instagram'] {
+  --profile-accent: #d62976;
+  --profile-background: linear-gradient(135deg, #feda75 0%, #d62976 48%, #4f5bd5 100%);
+}
+
+.social-wall__profile[data-network='YouTube'] {
+  --profile-accent: #ff0033;
+  --profile-background: linear-gradient(135deg, #ff334f 0%, #d90024 100%);
+}
+
+.social-wall__profile[data-network='TikTok'] {
+  --profile-accent: #25f4ee;
+  --profile-background: linear-gradient(135deg, #111 20%, #25f4ee 21%, #111 48%, #fe2c55 78%, #111 79%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .social-wall__profile,
+  .social-wall__profile::before {
+    transition: none;
+  }
+
+  .social-wall__profile:is(:hover, :focus-visible) {
+    transform: none;
+  }
+}
