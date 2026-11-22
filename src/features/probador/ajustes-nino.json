@@ -1,0 +1,42 @@
+{
+  "lilo-y-stitch": {
+    "x": 4,
+    "y": -46,
+    "scale": 91
+  },
+  "mickey": {
+    "x": 7,
+    "y": 29,
+    "scale": 100
+  },
+  "roblox": {
+    "x": 12,
+    "y": -55,
+    "scale": 89
+  },
+  "spider-man": {
+    "x": 8,
+    "y": -43,
+    "scale": 89
+  },
+  "stranger-things": {
+    "x": 11,
+    "y": -40,
+    "scale": 89
+  },
+  "tanjiro": {
+    "x": -2,
+    "y": -14,
+    "scale": 97
+  },
+  "toy-story": {
+    "x": 0,
+    "y": 0,
+    "scale": 96
+  },
+  "transformers": {
+    "x": 4,
+    "y": -17,
+    "scale": 95
+  }
+}

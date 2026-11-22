@@ -4,11 +4,10 @@ import gsap from 'gsap'
 import { brand } from '../../heroAssets'
 import { MobileMotionControls } from '../../MobileMotionControls'
 import { MOBILE_HERO_QUERY, useMobileHeroMotion } from '../../useMobileHeroMotion'
-import { socialProfiles } from '../social/socialCards'
+import { socialProfiles, visibleSocialProfiles } from '../social/socialCards'
 import './siteFooter.css'
 
 const art = import.meta.env.BASE_URL + 'assets/footer/'
-const footerProfiles = ['Instagram', 'TikTok'] as const
 
 type Props = {
   motionEnabled: boolean
@@ -122,7 +121,7 @@ export function SiteFooter({ motionEnabled, toggleMotion }: Props) {
 
         <div className="site-footer__actions">
           <nav className="site-footer__networks" aria-label="Redes del pie de página">
-            {footerProfiles.map((profile) => (
+            {visibleSocialProfiles.map((profile) => (
               <a className="poster site-footer__link" key={profile} href={socialProfiles[profile]}
                 target="_blank" rel="noopener noreferrer">
                 {profile}<span aria-hidden="true">↗</span>

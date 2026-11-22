@@ -5,7 +5,7 @@ import { Description } from './Description'
 import { StampExperience } from './features/probador/StampExperience'
 import { SocialWall } from './features/social/SocialWall'
 import { SiteFooter } from './features/footer/SiteFooter'
-import { WhatsAppLink } from './WhatsAppLink'
+import { contactUrl, WhatsAppLink } from './WhatsAppLink'
 import { MobileMotionControls } from './MobileMotionControls'
 import { MOBILE_HERO_QUERY, useMobileHeroMotion } from './useMobileHeroMotion'
 import { useGSAP } from '@gsap/react'
@@ -243,6 +243,9 @@ function Hero({ mode, motionEnabled, toggleMotion }: HeroProps) {
             <span>{item.label}</span><span className="poster-arrow" aria-hidden="true">↓</span>
           </a>
         ))}
+        <a className="poster poster-sand" href={contactUrl} target="_blank" rel="noopener noreferrer">
+          <span>Contacto</span><span className="poster-arrow" aria-hidden="true">↗</span>
+        </a>
       </nav>
 
       {mobileMotion.isMobile && (

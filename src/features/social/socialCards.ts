@@ -4,6 +4,8 @@ export const socialProfiles = {
   TikTok: 'https://www.tiktok.com/@roxwanainfo',
 } as const
 
+export const visibleSocialProfiles = ['Instagram', 'YouTube'] as const
+
 export const socialCards = [
   {
     id: 'produccion',
@@ -19,7 +21,7 @@ export const socialCards = [
     detail: 'Prendas en la calle',
     image: 'assets/social/calle-editorial-v0.12.0.webp',
     alt: 'Retrato urbano de una modelo con remera clara, junto a dos fotos de calle',
-    network: 'TikTok',
+    network: 'Instagram',
   },
   {
     id: 'movimiento',

@@ -4,15 +4,17 @@ const folder = import.meta.env.BASE_URL + 'assets/probador/'
 export const backdrop = folder + 'pared-probador-v0.10.0.webp'
 
 export type Pose = 'neutra' | 'mirada' | 'reaccion'
-export const modelIds = ['mujer', 'hombre'] as const
+export const modelIds = ['mujer', 'hombre', 'nino'] as const
 export type ModelId = (typeof modelIds)[number]
 export type Frames = Record<Pose, string>
 
 type Zone = { x: number; y: number; width: number; height: number; rotation: number }
 type PrintPosition = 'centro' | 'pechoDerecho'
+export type BlinkArt = { image: string; left: number; top: number; width: number }
 type ModelArt = {
   label: string
   frames: Frames
+  blink: BlinkArt
   portraitRatio: number
   printZones: Record<PrintPosition, Zone>
   chest: Omit<Zone, 'rotation'>
@@ -26,6 +28,7 @@ export const models: Record<ModelId, ModelArt> = {
       mirada: folder + 'modelo-mirada-v0.10.0.webp',
       reaccion: folder + 'modelo-agarre-v0.14.0.webp',
     },
+    blink: { image: folder + 'modelo-parpadeo-v0.15.0.webp', left: 211 / 520 * 100, top: 89 / 738 * 100, width: 91 / 520 * 100 },
     portraitRatio: 520 / 738,
     printZones: {
       centro: { x: 28, y: 44, width: 44, height: 30, rotation: 0 },
@@ -40,12 +43,28 @@ export const models: Record<ModelId, ModelArt> = {
       mirada: folder + 'hombre-mirada-v0.11.0.webp',
       reaccion: folder + 'hombre-agarre-v0.14.0.webp',
     },
+    blink: { image: folder + 'hombre-parpadeo-v0.15.0.webp', left: 250 / 560 * 100, top: 89 / 738 * 100, width: 94 / 560 * 100 },
     portraitRatio: 560 / 738,
     printZones: {
       centro: { x: 28, y: 42, width: 44, height: 30, rotation: 0 },
       pechoDerecho: { x: 32, y: 41, width: 13, height: 11, rotation: 0 },
     },
     chest: { x: 23, y: 40, width: 54, height: 39 },
+  },
+  nino: {
+    label: 'Niño',
+    frames: {
+      neutra: folder + 'nino-neutro-v0.17.0.webp',
+      mirada: folder + 'nino-mirada-v0.17.0.webp',
+      reaccion: folder + 'nino-agarre-v0.17.0.webp',
+    },
+    blink: { image: folder + 'nino-parpadeo-v0.17.0.webp', left: 445 / 1086 * 100, top: 193 / 1448 * 100, width: 200 / 1086 * 100 },
+    portraitRatio: 1086 / 1448,
+    printZones: {
+      centro: { x: 30, y: 40, width: 40, height: 33, rotation: 0 },
+      pechoDerecho: { x: 33, y: 39, width: 12, height: 10, rotation: 0 },
+    },
+    chest: { x: 27, y: 37, width: 46, height: 41 },
   },
 }
 

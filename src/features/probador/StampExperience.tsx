@@ -1,8 +1,9 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { backdrop, modelIds, models, placement, type ModelId, type Pose } from './artwork'
-import { stamps } from './catalog'
+import { stamps, childStamps } from './catalog'
 import { defaultAdjustment } from './adjustments'
 import { StampAdjuster } from './StampAdjuster'
+import { IdleBlink } from './IdleBlink'
 import { usePrintAdjustments } from './usePrintAdjustments'
 import { useStampReaction } from './useStampReaction'
 import './stampExperience.css'
@@ -13,26 +14,31 @@ const calibration = (() => {
   return pose === 'neutra' || pose === 'mirada' || pose === 'reaccion' ? pose : null
 })()
 
+const modelPosterColors = { mujer: 'paper', hombre: 'red', nino: 'gold' } as const
+
 export function StampExperience() {
   const section = useRef<HTMLElement>(null)
-  const [modelId, setModelId] = useState<ModelId>(() =>
-    new URLSearchParams(window.location.search).get('modelo') === 'hombre' ? 'hombre' : 'mujer',
-  )
+  const [modelId, setModelId] = useState<ModelId>(() => {
+    const requested = new URLSearchParams(window.location.search).get('modelo')
+    return modelIds.find(id => id === requested) ?? 'mujer'
+  })
   const model = models[modelId]
+  const catalog = modelId === 'nino' ? childStamps : stamps
   const { view, message, select, prepareReaction, resetPose } = useStampReaction(model.frames)
   const editor = usePrintAdjustments(modelId)
-  const pose: Pose = calibration ?? view.pose
+  const pose: Pose = view.pose ?? calibration ?? 'neutra'
+  const lookingDown = view.lookingDown || (view.pose === null && calibration !== null && calibration !== 'neutra')
   const stampId = view.stamp?.id
   const adjustment = stampId ? editor.drafts[stampId] ?? editor.saved[stampId] ?? defaultAdjustment : defaultAdjustment
   const zone = placement(modelId, pose, 'centro', adjustment, view.ratio)
 
   const chooseModel = (id: ModelId) => {
     if (id === modelId) return
-    resetPose()
+    resetPose((id === 'nino') !== (modelId === 'nino'))
     setModelId(id)
     const url = new URL(window.location.href)
-    if (id === 'hombre') url.searchParams.set('modelo', id)
-    else url.searchParams.delete('modelo')
+    if (id === 'mujer') url.searchParams.delete('modelo')
+    else url.searchParams.set('modelo', id)
     window.history.replaceState(window.history.state, '', url)
   }
 
@@ -61,7 +67,8 @@ export function StampExperience() {
           <p>Elegí un diseño y mirá cómo queda en la remera.</p>
           <div className="tryon-model-picker" role="group" aria-label="Modelo del probador">
             {modelIds.map(id => (
-              <button type="button" key={id} aria-pressed={modelId === id} onClick={() => chooseModel(id)}>
+              <button type="button" key={id} className={'poster poster-' + modelPosterColors[id]}
+                aria-pressed={modelId === id} onClick={() => chooseModel(id)}>
                 {models[id].label}
               </button>
             ))}
@@ -69,13 +76,19 @@ export function StampExperience() {
         </header>
 
         <div className="tryon-stage">
-          <div className="tryon-model" style={{ aspectRatio: model.portraitRatio }} data-model={modelId} data-pose={pose}>
-            {(Object.entries(model.frames) as [Pose, string][]).map(([framePose, src]) => (
-              <img key={framePose} className="tryon-portrait" src={src}
-                data-active={framePose === pose}
-                alt={framePose === pose ? model.label + ' con remera negra probando estampas' : ''}
-                loading="lazy" decoding="async" draggable={false} />
-            ))}
+          <div className="tryon-model" style={{ aspectRatio: model.portraitRatio }} data-model={modelId} data-pose={pose} data-looking-down={lookingDown}>
+            <img className="tryon-portrait tryon-arms-rest" src={model.frames.neutra} alt=""
+              loading="lazy" decoding="async" draggable={false} />
+            <img className="tryon-portrait tryon-arms-up" src={model.frames.reaccion} alt=""
+              loading="lazy" decoding="async" draggable={false} />
+            <img className="tryon-portrait tryon-front" src={model.frames.neutra}
+              alt={model.label + ' con remera negra probando estampas'}
+              loading="lazy" decoding="async" draggable={false} />
+            <img className="tryon-portrait tryon-head tryon-head-rest" src={model.frames.neutra} alt=""
+              loading="lazy" decoding="async" draggable={false} />
+            <img className="tryon-portrait tryon-head tryon-head-down" src={model.frames.mirada} alt=""
+              loading="lazy" decoding="async" draggable={false} />
+            <IdleBlink art={model.blink} paused={lookingDown || pose !== 'neutra'} />
             <div className="tryon-print-window" style={{
               left: zone.x + '%',
               top: zone.y + '%',
@@ -87,9 +100,10 @@ export function StampExperience() {
                 {view.stamp && <img src={view.stamp.src} alt={'Estampa ' + view.stamp.title} draggable={false} />}
               </div>
             </div>
-            {pose === 'reaccion' && (
-              <img className="tryon-grip" src={model.frames.reaccion} alt="" draggable={false} />
-            )}
+            <img className="tryon-portrait tryon-fingers tryon-fingers-left" src={model.frames.reaccion}
+              alt="" loading="lazy" decoding="async" draggable={false} />
+            <img className="tryon-portrait tryon-fingers tryon-fingers-right" src={model.frames.reaccion}
+              alt="" loading="lazy" decoding="async" draggable={false} />
             {calibration && Object.entries({ centro: placement(modelId, pose), pechoDerecho: placement(modelId, pose, 'pechoDerecho') }).map(([label, box]) => (
               <div className="tryon-guide" key={label} style={{
                 left: box.x + '%', top: box.y + '%', width: box.width + '%', height: box.height + '%',
@@ -107,7 +121,7 @@ export function StampExperience() {
                 <span className="tryon-sr">Remera lisa</span>
               </button>
             </li>
-            {stamps.map(stamp => (
+            {catalog.map(stamp => (
               <li key={stamp.id}>
                 <button
                   type="button"
@@ -120,7 +134,7 @@ export function StampExperience() {
               </li>
             ))}
           </ul>
-          {stamps.length === 0 && <p className="tryon-notice">Estampas en preparación.</p>}
+          {catalog.length === 0 && <p className="tryon-notice">Estampas en preparación.</p>}
         </div>
         {import.meta.env.DEV && (
           <StampAdjuster

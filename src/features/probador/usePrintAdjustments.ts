@@ -6,7 +6,7 @@ const endpoint = (model: ModelId) => developerEndpoint + '?modelo=' + model
 
 export function usePrintAdjustments(model: ModelId) {
   const [allSaved, setSaved] = useState(initialAdjustments)
-  const [allDrafts, setDrafts] = useState<Record<ModelId, Adjustments>>({ mujer: {}, hombre: {} })
+  const [allDrafts, setDrafts] = useState<Record<ModelId, Adjustments>>({ mujer: {}, hombre: {}, nino: {} })
   const [savingModel, setSavingModel] = useState<ModelId | null>(null)
   const [feedback, setFeedback] = useState<Partial<Record<ModelId, string>>>({})
   const saved = allSaved[model]

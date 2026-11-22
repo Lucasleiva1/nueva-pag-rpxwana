@@ -1,7 +1,7 @@
 import './whatsAppLink.css'
 
 const contactMessage = 'Hola, hola Roxana. Quisiera saber el precio de las remeras personalizadas.'
-const contactUrl = 'https://wa.me/5491138893673?text=' + encodeURIComponent(contactMessage)
+export const contactUrl = 'https://wa.me/5491138893673?text=' + encodeURIComponent(contactMessage)
 
 export function WhatsAppLink() {
   return (

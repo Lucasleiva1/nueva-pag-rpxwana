@@ -1,4 +1,4 @@
-import { socialProfiles } from './socialCards'
+import { socialProfiles, visibleSocialProfiles } from './socialCards'
 
 const icons = {
   Instagram: (
@@ -22,12 +22,10 @@ const icons = {
   ),
 }
 
-const networks = ['Instagram', 'YouTube', 'TikTok'] as const
-
 export function SocialLinks() {
   return (
     <nav className="social-wall__profiles" aria-label="Perfiles sociales de ROXWANA">
-      {networks.map((network) => (
+      {visibleSocialProfiles.map((network) => (
         <a key={network} href={socialProfiles[network]} target="_blank" rel="noopener noreferrer"
           aria-label={network} title={network} className="social-wall__profile" data-network={network}>
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"

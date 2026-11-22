@@ -34,6 +34,7 @@ def trimmed_rgba(source):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--version", required=True)
+    parser.add_argument("--infantil", action="store_true", help="Importar al catálogo de Niño")
     parser.add_argument("--estampa", nargs=2, action="append", required=True, metavar=("NOMBRE", "ARCHIVO"))
     args = parser.parse_args()
     if not re.fullmatch(r"\d+\.\d+\.\d+", args.version):
@@ -42,6 +43,9 @@ def main():
     root = Path(__file__).resolve().parents[1] / "src" / "features" / "probador"
     destination = root / "estampas"
     thumbnails = root / "miniaturas"
+    if args.infantil:
+        destination /= "infantil"
+        thumbnails /= "infantil"
     seen = set()
     names = set()
     prepared = []

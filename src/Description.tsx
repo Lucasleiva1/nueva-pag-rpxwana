@@ -1,8 +1,13 @@
 import { useLayoutEffect, useRef, type CSSProperties } from 'react'
 import { brand, descriptionArt } from './heroAssets'
+import { DescriptionListen } from './DescriptionListen'
 import '@fontsource/barlow/latin-500.css'
 import './description.css'
 
+const descriptionTechnique = 'Sublimación + DTF'
+const descriptionSubtitle = 'Modelos listos y diseños a pedido'
+const descriptionIntro = 'Hacemos remeras para marcas, negocios, eventos y uso personal. Podés elegir un diseño de ROXWANA, adaptar un modelo o traer tu propia idea para estampar.'
+const descriptionDetails = 'Estampamos con sublimación y DTF, según la tela y el diseño.'
 export function Description() {
   const section = useRef<HTMLElement>(null)
 
@@ -19,7 +24,9 @@ export function Description() {
         <img
           className="description-portrait"
           src={descriptionArt.portrait}
-          alt="Modelo pelirroja con remera estampada de ROXWANA"
+          alt="Modelo pelirroja en cuclillas con una remera de ROXWANA"
+          width="922"
+          height="1448"
           loading="lazy"
           decoding="async"
         />
@@ -30,15 +37,18 @@ export function Description() {
             <img src={brand.mark} width="51" height="38" alt="" />
             <span>Descripción</span>
           </header>
-          <h2 id="description-title">
-            <span>Remeras</span>
-            <span>personalizadas</span>
-          </h2>
-          <p className="description-technique">Sublimación + DTF</p>
+          <div className="description-title-row">
+            <h2 id="description-title">
+              <span>Remeras</span>
+              <span>personalizadas</span>
+            </h2>
+            <DescriptionListen src={descriptionArt.narration} />
+          </div>
+          <p className="description-technique">{descriptionTechnique}</p>
           <div className="description-body">
-            <h3>Modelos listos y diseños a pedido</h3>
-            <p>Hacemos remeras para marcas, negocios, eventos y uso personal. Podés elegir un diseño de ROXWANA, adaptar un modelo o traer tu propia idea para estampar.</p>
-            <p>Estampamos con sublimación y DTF, según la tela y el diseño. Nuestra gráfica mezcla calle y rock, con contrastes fuertes y texturas.</p>
+            <h3>{descriptionSubtitle}</h3>
+            <p>{descriptionIntro}</p>
+            <p>{descriptionDetails}</p>
           </div>
         </div>
       </div>

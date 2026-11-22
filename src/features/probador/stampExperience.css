@@ -69,23 +69,68 @@
   width: min(100%, 31rem);
   margin-inline: auto;
 }
-.tryon-portrait, .tryon-grip, .tryon-print img {
+/* The shirt stays fixed while the head and arms change independently. */
+.tryon-model {
+  --front-cut: polygon(0 31%, 100% 31%, 100% 35%, 74% 36%, 76% 48%, 75% 62%, 77% 74%, 78% 82%, 72% 88%, 66% 92%, 66% 100%, 34% 100%, 34% 92%, 28% 88%, 22% 82%, 23% 74%, 25% 62%, 24% 48%, 26% 36%, 0 35%);
+  --left-fingers: polygon(22% 57%, 25% 56.5%, 27.5% 57.4%, 27.4% 60%, 26.1% 62.1%, 23% 63%);
+  --right-fingers: polygon(78% 57%, 75% 56.4%, 72.6% 57.3%, 72.6% 60%, 74% 62%, 77% 63%);
+}
+.tryon-model[data-model="hombre"] {
+  --front-cut: polygon(0 31%, 100% 31%, 100% 34%, 74% 35%, 77% 48%, 74% 62%, 73% 72%, 74% 80%, 73% 86%, 65% 88%, 65% 100%, 35% 100%, 35% 88%, 27% 86%, 26% 80%, 27% 72%, 26% 62%, 23% 48%, 26% 35%, 0 34%);
+  --left-fingers: polygon(24% 65%, 27% 64%, 30.6% 64.9%, 30.6% 67.1%, 29.1% 70%, 25% 72%);
+  --right-fingers: polygon(76% 65%, 73% 64%, 68.8% 65%, 68.8% 67.5%, 71% 70%, 75% 72%);
+}
+
+.tryon-portrait, .tryon-print img {
   display: block;
   width: 100%;
   height: 100%;
   object-fit: contain;
 }
-.tryon-portrait, .tryon-grip { position: absolute; inset: 0; }
-.tryon-portrait[data-active="false"] { visibility: hidden; }
-
-/* Restore the fingers above the print when a wide design reaches the grip. */
-.tryon-grip {
+.tryon-portrait { position: absolute; inset: 0; pointer-events: none; }
+.tryon-front { clip-path: var(--front-cut); }
+.tryon-head {
+  mask-image: linear-gradient(#000 31%, transparent 36%);
+  transition: opacity .15s ease;
+}
+.tryon-eyelids {
+  position: absolute;
+  display: block;
+  height: auto;
+  opacity: 0;
   pointer-events: none;
-  clip-path: polygon(0 53%, 25% 55%, 27.8% 57.4%, 28% 60.5%, 26% 67%, 25% 82%, 75% 82%, 74% 67%, 72% 60.5%, 72.2% 57.4%, 75% 55%, 100% 53%, 100% 100%, 0 100%);
+  mask-image:
+    radial-gradient(ellipse 29% 58% at 25% 55%, #000 72%, transparent),
+    radial-gradient(ellipse 29% 58% at 75% 55%, #000 72%, transparent);
 }
-.tryon-model[data-model="hombre"] .tryon-grip {
-  clip-path: polygon(0 60%, 27% 63%, 30.5% 65.4%, 30.5% 68%, 29% 73.5%, 27% 82%, 73% 82%, 71% 73.5%, 68.8% 68%, 68.8% 65.4%, 72% 63%, 100% 60%, 100% 100%, 0 100%);
+.tryon-model[data-model="hombre"] .tryon-eyelids {
+  mask-image:
+    radial-gradient(ellipse 29% 53% at 25% 43%, #000 72%, transparent),
+    radial-gradient(ellipse 29% 53% at 76% 63%, #000 72%, transparent);
 }
+.tryon-head-down { opacity: 0; }
+.tryon-model[data-looking-down="true"] .tryon-head-rest { opacity: 0; }
+.tryon-model[data-looking-down="true"] .tryon-head-down { opacity: 1; }
+.tryon-arms-rest, .tryon-arms-up { clip-path: inset(34% 0 0); }
+.tryon-arms-rest { transition: opacity .13s ease; }
+.tryon-arms-up, .tryon-fingers {
+  opacity: 0;
+  transform: translateY(1.5%);
+  transition: opacity .13s ease, transform .18s ease-out;
+}
+.tryon-fingers-left { clip-path: var(--left-fingers); }
+.tryon-fingers-right { clip-path: var(--right-fingers); }
+
+.tryon-model[data-pose="reaccion"] .tryon-arms-rest { opacity: 0; }
+.tryon-model[data-pose="reaccion"] :is(.tryon-arms-up, .tryon-fingers) {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tryon-head, .tryon-arms-rest, .tryon-arms-up, .tryon-fingers { transition: none; transform: none; }
+}
+
 .tryon-print-window {
   position: absolute;
   overflow: clip;
@@ -275,23 +320,38 @@
   gap: .45rem;
   margin-top: 1.1rem;
 }
-.tryon-model-picker button {
+.tryon-model-picker .poster {
+  width: auto;
   min-height: 2.75rem;
-  padding: .4rem .9rem;
-  color: var(--tryon-paper);
-  background: #251d27e0;
-  border: 1px solid #e8cdd558;
-  border-radius: .35rem;
-  font-weight: 700;
-  cursor: pointer;
+  margin: 0;
+  padding: .32em .65em .4em;
+  justify-content: center;
+  font-size: clamp(1.25rem, 2.1vw, 2rem);
+  white-space: nowrap;
+  transform: rotate(var(--tilt));
   touch-action: manipulation;
 }
-.tryon-model-picker button[aria-pressed="true"] {
-  border-color: #ffc5cc;
-  background: #642632;
+.tryon-model-picker .poster[aria-pressed="true"] {
+  z-index: 1;
+  transform: rotate(0);
+  filter: drop-shadow(0 0 4px #ffc5cca0);
 }
-.tryon-model-picker button:focus-visible { outline: 2px solid var(--tryon-paper); outline-offset: 2px; }
+@media (hover: hover) {
+  .tryon-model-picker .poster:hover { transform: translateY(-2px) rotate(0); }
+}
+.tryon-model-picker .poster:active { transform: scale(.97); }
 .tryon-model[data-model="hombre"] { width: min(100%, 33.4rem); }
 @media (max-width: 560px) {
   .tryon-model[data-model="hombre"] { width: min(100%, 27rem); }
+}
+
+.tryon-model[data-model="nino"] {
+  --front-cut: polygon(0 31%, 100% 31%, 100% 34%, 73% 35%, 76% 44%, 73% 54%, 71% 68%, 66% 75%, 62% 81%, 59% 85%, 63% 100%, 37% 100%, 41% 85%, 38% 81%, 34% 75%, 29% 68%, 27% 54%, 24% 44%, 27% 35%, 0 34%);
+  --left-fingers: polygon(25% 60%, 29% 60.2%, 32.5% 61.5%, 32.7% 63.2%, 30% 66%, 26% 68%);
+  --right-fingers: polygon(75% 60%, 71% 60.2%, 66.5% 61.5%, 66.5% 63.2%, 69% 66%, 74% 68%);
+}
+.tryon-model[data-model="nino"] .tryon-eyelids {
+  mask-image:
+    radial-gradient(ellipse 27% 56% at 23% 55%, #000 72%, transparent),
+    radial-gradient(ellipse 27% 56% at 77% 57%, #000 72%, transparent);
 }

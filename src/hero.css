@@ -363,7 +363,7 @@ h1, p { margin: 0; }
   .character-pelirroja { --x: 48%; --y: 0%; --width: 45%; --height: 146%; }
   .character-campera { --x: 76%; --y: 13%; --width: 47%; --height: 135%; }
   .character-frente { --x: 29%; --y: 14%; --width: 55%; --height: 170%; }
-  .posters { grid-area: 4 / 1; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .12rem .35rem; width: min(100%, 37rem); justify-self: center; padding-block: .3rem .95rem; transform: none; }
+  .posters { grid-area: 4 / 1; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .28rem .55rem; width: min(100%, 37rem); justify-self: center; padding-block: .3rem .95rem; transform: none; }
   .poster { --shift: 0rem; font-size: clamp(1.65rem, 7.3vw, 3.25rem); min-height: 2.85rem; padding-inline: .37em; transform: rotateZ(var(--tilt)); }
   .poster:nth-child(even) { margin-top: .22rem; }
   .posters .poster { font-size: clamp(1.05rem, 4.45vw, 2.3rem); }

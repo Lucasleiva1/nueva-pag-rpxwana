@@ -44,13 +44,19 @@ function savePrintAdjustments(): Plugin {
       const feature = resolve(server.config.root, 'src/features/probador')
       const manifest = resolve(server.config.root, 'package.json')
       const endpoint = server.config.base + '__roxwana/probador/ajustes'
+      const adjustmentFiles = new Map([
+        ['mujer', 'ajustes.json'],
+        ['hombre', 'ajustes-hombre.json'],
+        ['nino', 'ajustes-nino.json'],
+      ])
 
       server.middlewares.use(async (request, response, next) => {
         const [path, query] = (request.url ?? '').split('?')
         if (path !== endpoint) return next()
         const model = new URLSearchParams(query).get('modelo') ?? 'mujer'
-        if (model !== 'mujer' && model !== 'hombre') return reply(response, 400, { error: 'Modelo inválido' })
-        const file = resolve(feature, model === 'hombre' ? 'ajustes-hombre.json' : 'ajustes.json')
+        const settingsFile = adjustmentFiles.get(model)
+        if (!settingsFile) return reply(response, 400, { error: 'Modelo inválido' })
+        const file = resolve(feature, settingsFile)
         const read = (): Record<string, Adjustment> => JSON.parse(readFileSync(file, 'utf8'))
         const host = request.headers.host ?? ''
         if (!/^(?:127\.0\.0\.1|localhost|\[::1\])(?::\d+)?$/.test(host)) {
@@ -73,7 +79,7 @@ function savePrintAdjustments(): Plugin {
             return reply(response, 400, { error: 'Ajustes inválidos' })
           }
 
-          const stampIds = new Set(readdirSync(resolve(feature, 'estampas'))
+          const stampIds = new Set(readdirSync(resolve(feature, model === 'nino' ? 'estampas/infantil' : 'estampas'))
             .filter(name => /\.(webp|png|avif)$/.test(name))
             .map(name => name.replace(/\.[^.]+$/, '').replace(/-v\d+\.\d+\.\d+$/, '')))
           const entries = Object.entries(changes)
