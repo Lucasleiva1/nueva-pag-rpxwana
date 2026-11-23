@@ -1,7 +1,9 @@
 import { createRoot } from 'react-dom/client'
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState, type MouseEvent } from 'react'
 import gsap from 'gsap'
 import { Description } from './Description'
+import { HeroSound } from './HeroSound'
+import { useHeroMusic } from './useHeroMusic'
 import { StampExperience } from './features/probador/StampExperience'
 import { SocialWall } from './features/social/SocialWall'
 import { SiteFooter } from './features/footer/SiteFooter'
@@ -23,22 +25,41 @@ const scenes = {
   rap: { label: 'Rap', backgrounds: rapBackgrounds, characters: rapCharacters, lead: 'rap-gorra' },
 } as const
 
-function sceneHref(mode: string, motion: boolean) {
-  const params = new URLSearchParams()
-  if (mode !== 'urbano') params.set('escena', mode)
-  if (!motion) params.set('movimiento', '0')
+type Scene = keyof typeof scenes
+const sceneOrder = ['urbano', 'metal', 'rap'] as const
+const autoSceneDelay = 20_000
+const sceneTracks: Record<Scene, string> = {
+  urbano: import.meta.env.BASE_URL + 'assets/portada-urbana-v0.19.0.mp3',
+  metal: import.meta.env.BASE_URL + 'assets/portada-heavy-v0.19.0.mp3',
+  rap: import.meta.env.BASE_URL + 'assets/portada-rap-v0.19.0.mp3',
+}
+
+function requestedScene(): Scene {
+  const scene = new URLSearchParams(window.location.search).get('escena')
+  return scene === 'metal' || scene === 'rap' ? scene : 'urbano'
+}
+
+function sceneHref(mode: Scene, motion: boolean) {
+  const params = new URLSearchParams(window.location.search)
+  if (mode === 'urbano') params.delete('escena')
+  else params.set('escena', mode)
+  if (motion) params.delete('movimiento')
+  else params.set('movimiento', '0')
   return params.size ? '?' + params : window.location.pathname
 }
 
 type HeroProps = {
-  mode: keyof typeof scenes
+  mode: Scene
   motionEnabled: boolean
-  toggleMotion: () => void
+  onSceneChange: (mode: Scene, event: MouseEvent<HTMLAnchorElement>) => void
 }
 
-function Hero({ mode, motionEnabled, toggleMotion }: HeroProps) {
+function Hero({ mode, motionEnabled, onSceneChange }: HeroProps) {
   const metal = mode === 'metal'
-  const { label, characters, backgrounds, lead } = scenes[mode]
+  const { characters, backgrounds, lead } = scenes[mode]
+  const index = sceneOrder.indexOf(mode)
+  const previousScene = index > 0 ? sceneOrder[index - 1] : undefined
+  const nextScene = sceneOrder.at(index + 1)
   const hero = useRef<HTMLElement>(null)
   const [missing, setMissing] = useState<string[]>([])
 
@@ -98,7 +119,7 @@ function Hero({ mode, motionEnabled, toggleMotion }: HeroProps) {
       )
     }
 
-    timeline.from('.poster', { x: 12 * travel, stagger: 0.035, duration: 0.32 }, 0.34)
+    timeline.from('.poster', { x: 12 * travel, stagger: 0.035, duration: 0.32, clearProps: 'transform' }, 0.34)
 
     let frame = 0
     let waiting = true
@@ -203,10 +224,7 @@ function Hero({ mode, motionEnabled, toggleMotion }: HeroProps) {
       {metal && <img src={metalSkull} className="scene-skull" alt="" decoding="async" />}
       <header className="masthead">
         <img src={brand.mark} width="52" height="38" alt="RXW" />
-        <span>{label}</span>
-        <button className="motion-toggle" type="button" aria-pressed={motionEnabled} onClick={toggleMotion}>
-          Movimiento 2.5D
-        </button>
+        <span>Estilo urbano</span>
       </header>
 
       <div className="brand">
@@ -249,17 +267,29 @@ function Hero({ mode, motionEnabled, toggleMotion }: HeroProps) {
       </nav>
 
       {mobileMotion.isMobile && (
-        <MobileMotionControls motion={mobileMotion} enabled={motionEnabled} toggleMotion={toggleMotion} />
+        <MobileMotionControls motion={mobileMotion} enabled={motionEnabled} />
       )}
       <footer className="hero-footer">
+        <div className="scene-arrows" role="group" aria-label="Flechas de portada">
+          {previousScene && (
+            <a className="poster poster-sand scene-arrow" data-scene-direction="previous"
+              href={sceneHref(previousScene, motionEnabled)} onClick={event => onSceneChange(previousScene, event)}
+              aria-label="Portada anterior"><span aria-hidden="true">←</span></a>
+          )}
+          {nextScene && (
+            <a className="poster poster-red scene-arrow" data-scene-direction="next"
+              href={sceneHref(nextScene, motionEnabled)} onClick={event => onSceneChange(nextScene, event)}
+              aria-label="Portada siguiente"><span aria-hidden="true">→</span></a>
+          )}
+        </div>
         <nav className="scene-switcher" aria-label="Cambiar portada">
-          {Object.entries(scenes).map(([id, scene]) => (
+          {sceneOrder.map(id => (
             <a
               key={id}
               href={sceneHref(id, motionEnabled)}
               aria-current={mode === id ? 'page' : undefined}
-              aria-label={scene.label}
-              title={scene.label}
+              aria-label={scenes[id].label}
+              onClick={event => onSceneChange(id, event)}
             />
           ))}
         </nav>
@@ -268,12 +298,49 @@ function Hero({ mode, motionEnabled, toggleMotion }: HeroProps) {
   )
 }
 
-const requestedScene = new URLSearchParams(window.location.search).get('escena')
-const mode = requestedScene === 'metal' || requestedScene === 'rap' ? requestedScene : 'urbano'
-document.title = 'ROXWANA — ' + scenes[mode].label
-
 function App() {
+  const [mode, setMode] = useState(requestedScene)
   const [motionEnabled, setMotionEnabled] = useState(() => new URLSearchParams(window.location.search).get('movimiento') !== '0')
+  const [autoCycle, setAutoCycle] = useState(true)
+  const keyboardControl = useRef<string | null>(null)
+  const music = useHeroMusic(sceneTracks[mode])
+  const cue = music.cue
+
+  useEffect(() => {
+    if (!autoCycle) return
+    const timer = window.setTimeout(() => {
+      const next = sceneOrder.at(sceneOrder.indexOf(mode) + 1) ?? 'urbano'
+      if (next === 'urbano') setAutoCycle(false)
+      window.history.replaceState(window.history.state, '', sceneHref(next, motionEnabled) + window.location.hash)
+      cue(sceneTracks[next])
+      setMode(next)
+    }, autoSceneDelay)
+    return () => window.clearTimeout(timer)
+  }, [autoCycle, cue, mode, motionEnabled])
+
+  useEffect(() => {
+    const control = keyboardControl.current
+    keyboardControl.current = null
+    if (!control) return
+    const cover = document.getElementById('portada')
+    const active = cover?.querySelector<HTMLElement>('.scene-switcher [aria-current="page"]')
+    const arrow = control === 'dot' ? undefined
+      : cover?.querySelector<HTMLElement>('[data-scene-direction="' + control + '"]')
+        ?? cover?.querySelector<HTMLElement>('.scene-arrow')
+    const target = arrow ?? active
+    target?.focus({ preventScroll: true })
+  }, [mode])
+
+  useEffect(() => {
+    const readHistory = () => {
+      const next = requestedScene()
+      if (next !== mode) setAutoCycle(false)
+      setMode(next)
+      setMotionEnabled(new URLSearchParams(window.location.search).get('movimiento') !== '0')
+    }
+    window.addEventListener('popstate', readHistory)
+    return () => window.removeEventListener('popstate', readHistory)
+  }, [mode])
 
   const toggleMotion = () => {
     const enabled = !motionEnabled
@@ -281,18 +348,54 @@ function App() {
     setMotionEnabled(enabled)
   }
 
+  const selectScene = (next: Scene, event: MouseEvent<HTMLAnchorElement>) => {
+    if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return
+    event.preventDefault()
+    setAutoCycle(false)
+    cue(sceneTracks[next])
+    if (next === mode) return
+
+    if (event.detail === 0) keyboardControl.current = event.currentTarget.dataset.sceneDirection ?? 'dot'
+    window.history.pushState(window.history.state, '', sceneHref(next, motionEnabled))
+    setMode(next)
+    window.scrollTo({ top: 0, behavior: 'instant' })
+  }
+
   return (
     <>
       <main>
-        <Hero mode={mode} motionEnabled={motionEnabled} toggleMotion={toggleMotion} />
-        <Description />
+        <Hero key={mode} mode={mode} motionEnabled={motionEnabled} onSceneChange={selectScene} />
+        <Description onReadingChange={music.setNarrating} />
         <StampExperience />
         <SocialWall />
       </main>
       <SiteFooter motionEnabled={motionEnabled} toggleMotion={toggleMotion} />
       <WhatsAppLink />
+      <HeroSound silenced={music.silenced} waitingForInteraction={music.waitingForInteraction}
+        toggle={music.toggle} volume={music.volume} setVolume={music.setVolume} />
+      <audio ref={music.audio} preload="none" loop />
     </>
   )
 }
 
+function restartCoverOnReload() {
+  const [navigation] = performance.getEntriesByType('navigation') as PerformanceNavigationTiming[]
+  if (navigation?.type !== 'reload') return
+
+  const url = new URL(window.location.href)
+  url.searchParams.delete('escena')
+  url.hash = ''
+  const previousRestoration = window.history.scrollRestoration
+  window.history.scrollRestoration = 'manual'
+  window.history.replaceState(window.history.state, '', url)
+  window.scrollTo({ top: 0, behavior: 'instant' })
+  window.addEventListener('pageshow', () => {
+    requestAnimationFrame(() => {
+      window.scrollTo({ top: 0, behavior: 'instant' })
+      window.history.scrollRestoration = previousRestoration
+    })
+  }, { once: true })
+}
+
+restartCoverOnReload()
 createRoot(document.getElementById('root')!).render(<App />)

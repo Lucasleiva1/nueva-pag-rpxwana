@@ -8,7 +8,7 @@ export const brand = {
 export const descriptionArt = {
   paper: assets + 'papel-descripcion-v0.8.0.webp',
   portrait: assets + 'pelirroja-cuclillas-v0.16.0.webp',
-  narration: assets + 'descripcion-voz-v0.18.0.wav',
+  narration: assets + 'descripcion-voz-v0.19.3.wav',
 }
 
 export const backgrounds = [

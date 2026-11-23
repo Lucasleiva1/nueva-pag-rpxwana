@@ -14,6 +14,8 @@ const calibration = (() => {
   return pose === 'neutra' || pose === 'mirada' || pose === 'reaccion' ? pose : null
 })()
 
+const showStampAdjuster = import.meta.env.DEV && false
+
 const modelPosterColors = { mujer: 'paper', hombre: 'red', nino: 'gold' } as const
 
 export function StampExperience() {
@@ -61,10 +63,10 @@ export function StampExperience() {
   return (
     <section id="probador" className="tryon" ref={section} aria-labelledby="tryon-title">
       <img src={backdrop} className="tryon-backdrop" loading="lazy" decoding="async" alt="" />
-      <div className={import.meta.env.DEV ? "tryon-layout tryon-layout-dev" : "tryon-layout"}>
+      <div className={showStampAdjuster ? "tryon-layout tryon-layout-dev" : "tryon-layout"}>
         <header className="tryon-heading">
           <h2 id="tryon-title">Cambiá <span>la estampa</span></h2>
-          <p>Elegí un diseño y mirá cómo queda en la remera.</p>
+          <p>Elegí uno de nuestros diseños y mirá cómo queda.</p>
           <div className="tryon-model-picker" role="group" aria-label="Modelo del probador">
             {modelIds.map(id => (
               <button type="button" key={id} className={'poster poster-' + modelPosterColors[id]}
@@ -136,7 +138,7 @@ export function StampExperience() {
           </ul>
           {catalog.length === 0 && <p className="tryon-notice">Estampas en preparación.</p>}
         </div>
-        {import.meta.env.DEV && (
+        {showStampAdjuster && (
           <StampAdjuster
             adjustment={adjustment}
             title={view.stamp?.title}

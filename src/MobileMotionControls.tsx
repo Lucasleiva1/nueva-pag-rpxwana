@@ -4,7 +4,7 @@ import type { useMobileHeroMotion } from './useMobileHeroMotion'
 type Props = {
   motion: ReturnType<typeof useMobileHeroMotion>
   enabled: boolean
-  toggleMotion: () => void
+  toggleMotion?: () => void
 }
 
 export function MobileMotionControls({ motion, enabled, toggleMotion }: Props) {
@@ -35,7 +35,9 @@ export function MobileMotionControls({ motion, enabled, toggleMotion }: Props) {
           </button>
         )}
         {enabled && active && <button type="button" onClick={recalibrate}>Recalibrar</button>}
-        <button type="button" onClick={toggleMotion}>{enabled ? 'Pausar 2.5D' : 'Reanudar 2.5D'}</button>
+        {toggleMotion && (
+          <button type="button" onClick={toggleMotion}>{enabled ? 'Pausar 2.5D' : 'Reanudar 2.5D'}</button>
+        )}
       </div>
       <p id={statusId} role="status">{enabled ? messages[status] : 'Movimiento en pausa.'}</p>
     </div>

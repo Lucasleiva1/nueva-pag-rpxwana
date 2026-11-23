@@ -1,17 +1,25 @@
 import { useEffect, useRef, useState } from 'react'
 
-export function DescriptionListen({ src }: { src: string }) {
+export function DescriptionListen({ src, onReadingChange }: { src: string; onReadingChange: (reading: boolean) => void }) {
   const audio = useRef<HTMLAudioElement>(null)
   const [reading, setReading] = useState(false)
   const [message, setMessage] = useState('')
 
   useEffect(() => {
     const track = audio.current
-    return () => track?.pause()
-  }, [])
+    return () => {
+      track?.pause()
+      onReadingChange(false)
+    }
+  }, [onReadingChange])
+
+  const finishReading = () => {
+    setReading(false)
+    onReadingChange(false)
+  }
 
   const playError = () => {
-    setReading(false)
+    finishReading()
     setMessage('No se pudo reproducir la lectura en voz alta.')
   }
 
@@ -22,12 +30,13 @@ export function DescriptionListen({ src }: { src: string }) {
     if (!track.paused) {
       track.pause()
       track.currentTime = 0
-      setReading(false)
+      finishReading()
       return
     }
 
     setMessage('')
     setReading(true)
+    onReadingChange(true)
     void track.play().catch((error: unknown) => {
       if (!(error instanceof DOMException && error.name === 'AbortError')) playError()
     })
@@ -35,7 +44,7 @@ export function DescriptionListen({ src }: { src: string }) {
 
   return (
     <>
-      <audio ref={audio} src={src} preload="none" onEnded={() => setReading(false)} onError={playError} />
+      <audio ref={audio} src={src} preload="none" onEnded={finishReading} onError={playError} />
       <button type="button" className="poster poster-red description-listen"
         aria-label={reading ? 'Detener lectura' : 'Escuchar descripción'}
         data-reading={reading} onClick={toggleReading}>

@@ -1,0 +1,152 @@
+.hero-audio-controls {
+  position: fixed;
+  z-index: 20;
+  top: max(clamp(.35rem, 1vw, 1rem), env(safe-area-inset-top));
+  right: max(clamp(1rem, 4vw, 5.25rem), env(safe-area-inset-right));
+  display: flex;
+  align-items: center;
+  gap: .35rem;
+}
+
+.hero-audio-controls .hero-volume {
+  --shift: 0rem;
+  --tilt: 2deg;
+  display: grid;
+  justify-items: center;
+  align-content: center;
+  gap: 0;
+  width: clamp(3.75rem, 8vw, 6rem);
+  min-height: 2.9rem;
+  padding: .18rem .32rem;
+  margin: 0;
+  text-shadow: none;
+  transform: rotate(var(--tilt));
+  font: 700 .75rem / 1 "Barlow", sans-serif;
+}
+.hero-volume input {
+  width: 100%;
+  min-height: 1.45rem;
+  margin: 0;
+  accent-color: #aa102a;
+  cursor: pointer;
+}
+.hero-volume:focus-within {
+  outline: 2px solid var(--paper);
+  outline-offset: 3px;
+}
+.hero-audio-controls .hero-volume:is(:hover, :active) { transform: rotate(var(--tilt)); }
+
+.hero-audio-controls .hero-sound {
+  --shift: 0rem;
+  --tilt: -4deg;
+  flex: 0 0 2.9rem;
+  width: 2.9rem;
+  min-height: 2.9rem;
+  margin: 0;
+  padding: 0;
+  justify-content: center;
+  transform: rotate(var(--tilt));
+  touch-action: manipulation;
+}
+
+.hero-audio-controls .hero-sound {
+  --fill: #eadcc5;
+  --type: #201911;
+}
+
+.hero-audio-controls .hero-sound:is([data-silenced="true"], [data-waiting="true"]) {
+  --fill: #c71231;
+  --type: #fff5e1;
+  filter: drop-shadow(0 0 5px #ec254c80);
+}
+
+.hero-sound-waves {
+  position: absolute;
+  inset-inline-end: calc(100% + .2rem);
+  inset-block-start: 50%;
+  width: 1.75rem;
+  height: 2.25rem;
+  transform: translateY(-50%);
+  color: #ff4b66;
+  filter: drop-shadow(0 0 2px #300610);
+  pointer-events: none;
+}
+
+.hero-sound:is([data-silenced="true"], [data-waiting="true"]) {
+  --ring-cycle: 1.55s;
+  --ring-angle: 8deg;
+  --ring-x: 2px;
+  --ring-y: 1px;
+  animation: hero-sound-ring var(--ring-cycle) ease-in-out infinite;
+}
+
+/* Shake the artwork while the button's hit area stays still. */
+.hero-sound:is([data-silenced="true"], [data-waiting="true"])::before,
+.hero-sound:is([data-silenced="true"], [data-waiting="true"])::after,
+.hero-sound:is([data-silenced="true"], [data-waiting="true"]) > svg:first-child {
+  animation: hero-sound-rattle var(--ring-cycle) ease-in-out infinite;
+}
+
+.hero-sound-waves {
+  animation: hero-sound-waves-reset var(--ring-cycle) linear infinite;
+}
+
+.hero-sound-waves path {
+  opacity: 0;
+  animation: hero-sound-wave var(--ring-cycle) steps(1) infinite;
+}
+
+.hero-sound-waves path:nth-child(2) { animation-delay: .16s; }
+.hero-sound-waves path:nth-child(3) { animation-delay: .32s; }
+
+@keyframes hero-sound-rattle {
+  0%, 53%, 100% { translate: 0; rotate: 0deg; }
+  6%, 16%, 26%, 36%, 46% {
+    translate: calc(-1 * var(--ring-x)) var(--ring-y);
+    rotate: calc(-1 * var(--ring-angle));
+  }
+  11%, 21%, 31%, 41% {
+    translate: var(--ring-x) calc(-1 * var(--ring-y));
+    rotate: var(--ring-angle);
+  }
+}
+
+@keyframes hero-sound-ring {
+  0%, 69%, 100% { filter: brightness(1) drop-shadow(0 0 3px #ec254c80); }
+  9%, 53% { filter: brightness(1.48) drop-shadow(0 0 10px #ff3d62); }
+}
+
+@keyframes hero-sound-wave {
+  0%, 76%, 100% { opacity: 0; }
+  9% { opacity: 1; }
+}
+
+@keyframes hero-sound-waves-reset {
+  0%, 55% { opacity: 1; }
+  67%, 100% { opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-sound:is([data-silenced="true"], [data-waiting="true"]) {
+    --ring-angle: 5deg;
+    --ring-x: 0px;
+    --ring-y: 0px;
+    animation: none;
+  }
+
+  .hero-sound:is([data-silenced="true"], [data-waiting="true"])::before,
+  .hero-sound:is([data-silenced="true"], [data-waiting="true"])::after {
+    animation: none;
+  }
+}
+
+@media (any-hover: hover) {
+  .hero-audio-controls .hero-sound:hover { transform: translateY(-3px) rotate(0) scale(1.06); }
+}
+
+.hero-audio-controls .hero-sound:active { transform: scale(.97); }
+
+@media (max-width: 480px) {
+  .masthead { gap: .65rem; }
+  .masthead span { padding-left: .65rem; }
+}

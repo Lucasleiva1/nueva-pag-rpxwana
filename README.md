@@ -26,26 +26,32 @@ Abrir `/?escena=metal` en el servidor local para revisar el trío metal con sus 
 
 Abrir `/?escena=rap` para ver el trío rap. Cada personaje tiene un PNG maestro transparente y una copia WebP. El callejón grafiteado y la van de puerta corrediza son fondos separados. Sus posiciones y recortes están en `hero.css`.
 
-Los tres puntos del pie permiten cambiar entre Estilo urbano, Heavy metal y Rap. El punto relleno indica la portada activa.
+Los tres puntos del pie permiten cambiar entre Estilo urbano, Heavy metal y Rap. El punto relleno indica la portada activa. Las flechas de los extremos inferiores permiten avanzar y retroceder. Al ingresar, la portada avanza cada 20 segundos hasta volver de Rap a Estilo urbano. La vuelta ocurre una vez y se cancela al elegir manualmente con un punto o una flecha. Al recargar, se vuelve al inicio en Estilo urbano y se activa una vuelta nueva.
 
 Las etiquetas de portada enlazan a Descripción (`#descripcion`), Estampas (`#probador`), Redes (`#redes`) y Contacto. Contacto abre el mismo WhatsApp que el botón flotante. Están disponibles en las tres variantes de Portada.
 
+## Música de Portada
+
+Estilo urbano, Heavy metal y Rap usan `public/assets/portada-urbana-v0.19.0.mp3`, `public/assets/portada-heavy-v0.19.0.mp3` y `public/assets/portada-rap-v0.19.0.mp3`, respectivamente. Son copias web de los WAV entregados. El parlante está arriba a la derecha. La música empieza en silencio. El parlante pulsa en rojo y muestra tres ondas una por una hasta que el visitante activa el sonido. El control de volumen contiguo arranca al 10 % y mantiene el nivel al cambiar de escena. Con el sonido activado, la pista correspondiente empieza al elegir el estilo y sigue sonando al recorrer la página. Los controles permanecen fijos arriba a la derecha. La música se pausa durante la lectura de Descripción y retoma desde el mismo punto al terminar o detenerla, en el volumen elegido. Al cambiar de estilo se reemplaza la pista anterior.
+
+Las pistas se asignan por estilo en `sceneTracks` dentro de `src/main.tsx`.
+
 ## Profundidad 2.5D
 
-En escritorio, cada capa sigue el movimiento del mouse con la intensidad de `depth` en `src/heroAssets.ts`. Un valor negativo mueve el fondo en la dirección opuesta. GSAP separa el parallax de las animaciones de entrada. El menú y los puntos de navegación conservan su posición. El parallax está activo de forma predeterminada con mouse en escritorio. El control Movimiento 2.5D permite pausarlo. Los enlaces conservan esa elección mediante `movimiento=0`. El parallax no se activa con toque. Al entrar en cada escena, sus dos fondos y sus tres personajes se superponen en secuencia durante cerca de un segundo. Con movimiento reducido, la entrada usa desplazamientos más cortos. El control Movimiento 2.5D pausa tanto el parallax como las entradas siguientes.
+En escritorio, cada capa sigue el movimiento del mouse con la intensidad de `depth` en `src/heroAssets.ts`. Un valor negativo mueve el fondo en la dirección opuesta. GSAP separa el parallax de las animaciones de entrada. El menú y los puntos de navegación conservan su posición. El parallax está activo de forma predeterminada con mouse en escritorio. La portada muestra el movimiento 2.5D por defecto. La URL `movimiento=0` permite pausarlo durante una revisión. El parallax no se activa con toque. Al entrar en cada escena, sus dos fondos y sus tres personajes se superponen en secuencia durante cerca de un segundo. Con movimiento reducido, la entrada usa desplazamientos más cortos.
 
 ## Descripción
 
-La sección `#descripcion` aparece después de las tres variantes de Portada. Usa el recorte de la modelo pelirroja en cuclillas y explica la personalización de remeras, la sublimación y el DTF. Su maquetación está en `src/Description.tsx` y `src/description.css`.
+La sección `#descripcion` aparece después de las tres variantes de Portada. Usa el recorte de la modelo pelirroja en cuclillas y explica la personalización de remeras, la sublimación y el DTF. La modelo sube y baja suavemente y se amplía al pasarle el mouse por encima. Su maquetación está en `src/Description.tsx` y `src/description.css`.
 
 
-El botón **Escuchar** reproduce la pista provisoria en español `public/assets/descripcion-voz-v0.18.0.wav`, generada con Microsoft Helena Desktop. Se activa con un toque y se detiene desde el mismo botón. Para usar la voz definitiva, actualizar `descriptionArt.narration` en `src/heroAssets.ts` con el archivo de la nueva locución.
+El botón **Escuchar** reproduce la descripción completa con el locutor rioplatense de ROXWANA. La versión con las pausas limpias está en `public/assets/descripcion-voz-v0.19.3.wav`. El mismo botón inicia o detiene la lectura.
 
 ## Movimiento en celular
 
 - En una portada, tocar **Activar movimiento**, aceptar el permiso si aparece y mantener el celular quieto durante la calibración. **Recalibrar** toma una nueva posición de referencia y **Desactivar movimiento** vuelve al control táctil.
-- Deslizar un dedo sobre los personajes permite probar el parallax táctil. Al soltar vuelven al centro. El gesto vertical conserva el scroll del navegador. **Pausar 2.5D** detiene el movimiento y se respeta al cambiar de portada.
-- Los fondos usan dos fotos más recortes de papel animados. Cada personaje tiene su capa. No hay un recorte separado de la mano, de modo que se mueve con el personaje. La salida con ScrollTrigger solo desplaza el fondo de Portada. Descripción permanece estática.
+- Deslizar un dedo sobre los personajes permite probar el parallax táctil. Al soltar vuelven al centro. El gesto vertical conserva el scroll del navegador.
+- Los fondos usan dos fotos más recortes de papel animados. Cada personaje tiene su capa. No hay un recorte separado de la mano, de modo que se mueve con el personaje. La salida con ScrollTrigger solo desplaza el fondo de Portada.
 - Abrir desde el teléfono una vista de desarrollo por HTTPS para probar el sensor. Para probar solo los gestos en la misma red, iniciar Vite con `npm run dev -- --host 0.0.0.0` y abrir la dirección de red que muestra Vite. En una URL HTTP de red, el sensor puede estar bloqueado, pero funciona el gesto táctil.
 - Ajustar `mobileDepth` y `delay` en `src/heroAssets.ts`, la sensibilidad en `src/deviceTilt.ts`, y los tamaños y áreas seguras en `src/hero.css` y `src/mobileHero.css`. La inclinación requiere autorización en navegadores que la solicitan. Con movimiento reducido, los gestos y el scroll quedan estáticos, y una activación explícita de inclinación usa un recorrido menor.
 
@@ -65,7 +71,7 @@ El script verifica el alfa, recorta márgenes transparentes, conserva la proporc
 Para ver las guías en desarrollo, abrir `/?calibrar=neutra#probador`. Los valores `mirada` y `reaccion` muestran la cabeza baja con las manos en los bolsillos y la pose con los brazos levantados, respectivamente. Al elegir o volver a tocar una estampa se ve la reacción y, al terminar, se recupera la pose de calibración. `src/features/probador/artwork.ts` define las zonas. El selector usa `centro` y `pechoDerecho` queda preparada para una estampa chica en el pecho derecho de la modelo.
 
 
-En el servidor de desarrollo, **Ajustar estampa** permite variar el tamaño con el deslizador y mover el punto con el mouse, el dedo o las flechas del teclado. Cada diseño tiene sus propios ajustes. **Guardar** persiste todos los que se editaron en `src/features/probador/ajustes.json`, que se incluye al compilar la página pública. El panel aparece solo en desarrollo y el guardado se acepta solo en localhost. El recorrido tiene límites por tamaño y proporción, de modo que la estampa quede dentro del pecho.
+El probador aplica los ajustes guardados de cada estampa. El panel **Ajustar estampa** está oculto en esta versión. Para una nueva calibración, se puede habilitar en desarrollo desde `showStampAdjuster` en `src/features/probador/StampExperience.tsx`.
 
 El selector **Mujer / Hombre / Niño** usa el estilo de papel de la portada. Al pasar entre Mujer y Hombre se conserva la estampa activa. La URL `/?modelo=hombre#probador` abre el modelo masculino. Los ajustes se guardan por modelo en `ajustes.json` y `ajustes-hombre.json`.
 

@@ -8,7 +8,7 @@ const descriptionTechnique = 'Sublimación + DTF'
 const descriptionSubtitle = 'Modelos listos y diseños a pedido'
 const descriptionIntro = 'Hacemos remeras para marcas, negocios, eventos y uso personal. Podés elegir un diseño de ROXWANA, adaptar un modelo o traer tu propia idea para estampar.'
 const descriptionDetails = 'Estampamos con sublimación y DTF, según la tela y el diseño.'
-export function Description() {
+export function Description({ onReadingChange }: { onReadingChange: (reading: boolean) => void }) {
   const section = useRef<HTMLElement>(null)
 
   useLayoutEffect(() => {
@@ -42,7 +42,7 @@ export function Description() {
               <span>Remeras</span>
               <span>personalizadas</span>
             </h2>
-            <DescriptionListen src={descriptionArt.narration} />
+            <DescriptionListen src={descriptionArt.narration} onReadingChange={onReadingChange} />
           </div>
           <p className="description-technique">{descriptionTechnique}</p>
           <div className="description-body">

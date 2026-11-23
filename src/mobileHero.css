@@ -36,7 +36,6 @@
   padding-bottom: env(safe-area-inset-bottom);
   grid-template-rows: auto 1fr auto auto;
 }
-.hero-mobile .motion-toggle { display: none; }
 .hero-mobile .hero-footer { grid-row: 4; }
 .hero-mobile.hero-motion-enabled .scene-depth:first-child { inset: -5px; }
 .hero-mobile .cast { grid-area: 2 / 1 / 5 / -1; }
