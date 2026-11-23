@@ -71,12 +71,12 @@
 }
 /* The shirt stays fixed while the head and arms change independently. */
 .tryon-model {
-  --front-cut: polygon(0 31%, 100% 31%, 100% 35%, 74% 36%, 76% 48%, 75% 62%, 77% 74%, 78% 82%, 72% 88%, 66% 92%, 66% 100%, 34% 100%, 34% 92%, 28% 88%, 22% 82%, 23% 74%, 25% 62%, 24% 48%, 26% 36%, 0 35%);
+  --sleeve-cut: polygon(20.5% 40%, 18.9% 42%, 17.1% 44%, 15.8% 46%, 12.1% 48%, 0 51%, 0 100%, 100% 100%, 100% 51%, 88% 48%, 84% 46%, 82.6% 44%, 80.9% 42%, 79.2% 40%);
   --left-fingers: polygon(22% 57%, 25% 56.5%, 27.5% 57.4%, 27.4% 60%, 26.1% 62.1%, 23% 63%);
   --right-fingers: polygon(78% 57%, 75% 56.4%, 72.6% 57.3%, 72.6% 60%, 74% 62%, 77% 63%);
 }
 .tryon-model[data-model="hombre"] {
-  --front-cut: polygon(0 31%, 100% 31%, 100% 34%, 74% 35%, 77% 48%, 74% 62%, 73% 72%, 74% 80%, 73% 86%, 65% 88%, 65% 100%, 35% 100%, 35% 88%, 27% 86%, 26% 80%, 27% 72%, 26% 62%, 23% 48%, 26% 35%, 0 34%);
+  --sleeve-cut: polygon(18.6% 40%, 16.5% 42%, 15.0% 44%, 12.2% 46%, 10.3% 48%, 0 51%, 0 100%, 100% 100%, 100% 51%, 88.5% 48%, 87.6% 46%, 86% 44%, 84.2% 42%, 82.1% 40%);
   --left-fingers: polygon(24% 65%, 27% 64%, 30.6% 64.9%, 30.6% 67.1%, 29.1% 70%, 25% 72%);
   --right-fingers: polygon(76% 65%, 73% 64%, 68.8% 65%, 68.8% 67.5%, 71% 70%, 75% 72%);
 }
@@ -88,7 +88,10 @@
   object-fit: contain;
 }
 .tryon-portrait { position: absolute; inset: 0; pointer-events: none; }
-.tryon-front { clip-path: var(--front-cut); }
+.tryon-front {
+  mask-repeat: no-repeat;
+  mask-size: 100% 100%;
+}
 .tryon-head {
   mask-image: linear-gradient(#000 31%, transparent 36%);
   transition: opacity .15s ease;
@@ -111,7 +114,11 @@
 .tryon-head-down { opacity: 0; }
 .tryon-model[data-looking-down="true"] .tryon-head-rest { opacity: 0; }
 .tryon-model[data-looking-down="true"] .tryon-head-down { opacity: 1; }
-.tryon-arms-rest, .tryon-arms-up { clip-path: inset(34% 0 0); }
+.tryon-arms-rest { clip-path: inset(34% 0 0); }
+.tryon-arms-up {
+  clip-path: var(--sleeve-cut);
+  mask-image: linear-gradient(transparent 40%, #000 45%);
+}
 .tryon-arms-rest { transition: opacity .13s ease; }
 .tryon-arms-up, .tryon-fingers {
   opacity: 0;
@@ -346,7 +353,7 @@
 }
 
 .tryon-model[data-model="nino"] {
-  --front-cut: polygon(0 31%, 100% 31%, 100% 34%, 73% 35%, 76% 44%, 73% 54%, 71% 68%, 66% 75%, 62% 81%, 59% 85%, 63% 100%, 37% 100%, 41% 85%, 38% 81%, 34% 75%, 29% 68%, 27% 54%, 24% 44%, 27% 35%, 0 34%);
+  --sleeve-cut: polygon(22.8% 40%, 21.4% 42%, 19.9% 44%, 17.8% 46%, 14.3% 48%, 0 51%, 0 100%, 100% 100%, 100% 51%, 84.4% 48%, 81.6% 46%, 79.5% 44%, 77.5% 42%, 76% 40%);
   --left-fingers: polygon(25% 60%, 29% 60.2%, 32.5% 61.5%, 32.7% 63.2%, 30% 66%, 26% 68%);
   --right-fingers: polygon(75% 60%, 71% 60.2%, 66.5% 61.5%, 66.5% 63.2%, 69% 66%, 74% 68%);
 }

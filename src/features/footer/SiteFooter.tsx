@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react'
 import { useGSAP } from '@gsap/react'
 import gsap from 'gsap'
 import { brand } from '../../heroAssets'
+import { useScrollReveal } from '../../useScrollReveal'
 import { MobileMotionControls } from '../../MobileMotionControls'
 import { MOBILE_HERO_QUERY, useMobileHeroMotion } from '../../useMobileHeroMotion'
 import { socialProfiles, visibleSocialProfiles } from '../social/socialCards'
@@ -16,6 +17,7 @@ type Props = {
 
 export function SiteFooter({ motionEnabled, toggleMotion }: Props) {
   const footer = useRef<HTMLElement>(null)
+  useScrollReveal(footer, motionEnabled)
   const introReady = useRef(true)
   const mobileMotion = useMobileHeroMotion(footer, introReady, motionEnabled, '.site-footer__stage')
 
@@ -55,22 +57,6 @@ export function SiteFooter({ motionEnabled, toggleMotion }: Props) {
         })
       }
 
-      const observer = new IntersectionObserver(([entry]) => {
-        if (!entry.isIntersecting || entry.intersectionRatio < 0.26) return
-        observer.disconnect()
-        context.add(() => {
-          gsap.from(section.querySelectorAll('[data-footer-arrival]'), {
-            opacity: 0,
-            x: (_index: number, item: HTMLElement) => Number(item.dataset.footerArrival),
-            y: 17,
-            duration: 0.53,
-            stagger: 0.09,
-            ease: 'power3.out',
-            clearProps: 'transform,opacity',
-          })
-        })
-      }, { threshold: 0.26 })
-      observer.observe(section)
       if (useMouse) {
         section.addEventListener('pointermove', onMouseMove)
         section.addEventListener('pointerleave', reset)
@@ -79,7 +65,6 @@ export function SiteFooter({ motionEnabled, toggleMotion }: Props) {
       }
 
       return () => {
-        observer.disconnect()
         section.removeEventListener('pointermove', onMouseMove)
         section.removeEventListener('pointerleave', reset)
         window.removeEventListener('blur', reset)
@@ -98,28 +83,28 @@ export function SiteFooter({ motionEnabled, toggleMotion }: Props) {
       <div className="site-footer__layout">
         <div className="site-footer__stage">
           <div className="site-footer__scrap" data-footer-depth="-7" data-mobile-depth="-2" aria-hidden="true">
-            <span />
+            <span data-scroll-reveal="38" />
           </div>
           <div className="site-footer__guitarist" data-footer-depth="36" data-mobile-depth="14" aria-hidden="true">
             <img src={art + 'guitarrista-v0.13.0.webp'} width="1024" height="1536" alt=""
-              loading="lazy" decoding="async" draggable={false} data-footer-arrival="-32" />
+              loading="lazy" decoding="async" draggable={false} data-scroll-reveal="-54" />
           </div>
-          <div className="site-footer__brand" data-footer-arrival="16">
+          <div className="site-footer__brand" data-scroll-reveal="18" data-reveal-delay="75">
             <img src={brand.seal} width="126" height="126" alt="" loading="lazy" decoding="async" />
             <span>ROXWANA</span>
           </div>
         </div>
 
         <div className="site-footer__message" data-footer-depth="6" data-mobile-depth="3">
-          <div data-footer-arrival="26">
+          <div data-scroll-reveal="40" data-reveal-delay="125">
             <h2 id="site-footer-title" className="poster site-footer__headline">¿Listo para hacer ruido?</h2>
           </div>
-          <div data-footer-arrival="-22">
+          <div data-scroll-reveal="-34" data-reveal-delay="195">
             <p className="poster poster-red site-footer__subline">Hablá con ROXWANA</p>
           </div>
         </div>
 
-        <div className="site-footer__actions">
+        <div className="site-footer__actions" data-scroll-reveal="0" data-reveal-delay="85">
           <nav className="site-footer__networks" aria-label="Redes del pie de página">
             {visibleSocialProfiles.map((profile) => (
               <a className="poster site-footer__link" key={profile} href={socialProfiles[profile]}

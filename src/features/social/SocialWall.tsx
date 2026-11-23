@@ -3,14 +3,16 @@ import { useGSAP } from '@gsap/react'
 import gsap from 'gsap'
 import { socialCards, socialProfiles } from './socialCards'
 import { SocialLinks } from './SocialLinks'
+import { useScrollReveal } from '../../useScrollReveal'
 import './socialWall.css'
 
 const MOBILE_WALL = '(max-width: 900px)'
 const REDUCED_MOTION = '(prefers-reduced-motion: reduce)'
 const FINE_POINTER = '(hover: hover) and (pointer: fine)'
 
-export function SocialWall() {
+export function SocialWall({ motionEnabled }: { motionEnabled: boolean }) {
   const section = useRef<HTMLElement>(null)
+  useScrollReveal(section, motionEnabled)
   const strip = useRef<HTMLUListElement>(null)
   const [active, setActive] = useState(0)
 
@@ -20,7 +22,7 @@ export function SocialWall() {
 
   useGSAP(() => {
     const track = strip.current
-    if (!track || new URLSearchParams(window.location.search).get('movimiento') === '0') return
+    if (!track || !motionEnabled) return
 
     const media = gsap.matchMedia()
     media.add({
@@ -32,48 +34,7 @@ export function SocialWall() {
       const { mobile, desktop, reduce, pointer } = context.conditions!
       if (reduce) return
 
-      const cards = gsap.utils.toArray<HTMLElement>('.social-wall__card', track)
       const worktop = section.current?.querySelector('.social-wall__papers')
-      const tape = gsap.utils.toArray<HTMLElement>('.social-wall__tape', track)
-      let revealed = false
-      const reveal = () => {
-        if (revealed) return
-        revealed = true
-        observer.disconnect()
-        context.add(() => {
-          const entrance = gsap.timeline().from(cards, {
-            opacity: 0,
-            x: mobile ? 0 : (index) => (index - 1) * 34,
-            y: mobile ? 15 : 32,
-            rotation: mobile ? 0 : (index) => (index - 1) * 4,
-            duration: 0.48,
-            stagger: 0.09,
-            ease: 'power3.out',
-            clearProps: 'transform,opacity',
-          })
-          entrance.from(tape, {
-            opacity: 0,
-            y: -12,
-            duration: 0.24,
-            stagger: 0.09,
-            clearProps: 'transform,opacity',
-          }, 0.18)
-          if (worktop) {
-            entrance.from(worktop, {
-              y: 24,
-              opacity: 0,
-              duration: 0.55,
-              clearProps: 'transform,opacity',
-            }, 0)
-          }
-        })
-      }
-      const observer = new IntersectionObserver(([entry]) => {
-        if (entry.isIntersecting) reveal()
-      }, { threshold: 0.18 })
-      observer.observe(track)
-      track.addEventListener('focusin', reveal)
-
       const layers = gsap.utils.toArray<HTMLElement>('.social-wall__depth', track)
       const move = desktop && pointer ? layers.map((layer, index) => {
         const depth = [10, 16, 8][index]
@@ -105,14 +66,12 @@ export function SocialWall() {
       }
 
       return () => {
-        observer.disconnect()
-        track.removeEventListener('focusin', reveal)
         track.removeEventListener('pointermove', onMove)
         track.removeEventListener('pointerleave', reset)
       }
     })
     return () => media.revert()
-  }, { scope: section })
+  }, { scope: section, dependencies: [motionEnabled], revertOnUpdate: true })
 
   function updateActive() {
     const track = strip.current
@@ -141,17 +100,17 @@ export function SocialWall() {
   return (
     <section id="redes" ref={section} className="social-wall" aria-labelledby="social-wall-title">
       <div className="social-wall__papers" aria-hidden="true">
-        <span />
-        <span />
+        <span data-scroll-reveal="-38" />
+        <span data-scroll-reveal="38" data-reveal-delay="75" />
       </div>
       <header className="social-wall__header">
-        <div className="social-wall__eyebrow">Redes sociales</div>
-        <h2 id="social-wall-title">El muro social</h2>
+        <div className="social-wall__eyebrow" data-scroll-reveal="-18">Redes sociales</div>
+        <h2 id="social-wall-title" data-scroll-reveal="34" data-reveal-delay="70">El muro social</h2>
       </header>
 
       <ul id="afiches-sociales" ref={strip} className="social-wall__strip" onScroll={updateActive}>
-        {socialCards.map((card) => (
-          <li className="social-wall__card" key={card.id}>
+        {socialCards.map((card, index) => (
+          <li className="social-wall__card" key={card.id} data-scroll-reveal={(index - 1) * 38} data-reveal-delay={index * 90}>
             <div className="social-wall__depth">
               <a className="social-wall__poster" href={socialProfiles[card.network]} target="_blank" rel="noopener noreferrer"
                 aria-label={card.title + ' · Ver en ' + card.network}>
@@ -170,7 +129,7 @@ export function SocialWall() {
         ))}
       </ul>
 
-      <div className="social-wall__controls" aria-label="Navegación de afiches">
+      <div className="social-wall__controls" data-scroll-reveal="0" aria-label="Navegación de afiches">
         <button type="button" aria-label="Afiche anterior" aria-controls="afiches-sociales" disabled={active === 0} onClick={() => goTo(active - 1)}>‹</button>
         <span aria-live="polite" aria-atomic="true">{active + 1} de {socialCards.length}</span>
         <button type="button" aria-label="Afiche siguiente" aria-controls="afiches-sociales" disabled={active === socialCards.length - 1} onClick={() => goTo(active + 1)}>›</button>

@@ -40,6 +40,10 @@ Las pistas se asignan por estilo en `sceneTracks` dentro de `src/main.tsx`.
 
 En escritorio, cada capa sigue el movimiento del mouse con la intensidad de `depth` en `src/heroAssets.ts`. Un valor negativo mueve el fondo en la dirección opuesta. GSAP separa el parallax de las animaciones de entrada. El menú y los puntos de navegación conservan su posición. El parallax está activo de forma predeterminada con mouse en escritorio. La portada muestra el movimiento 2.5D por defecto. La URL `movimiento=0` permite pausarlo durante una revisión. El parallax no se activa con toque. Al entrar en cada escena, sus dos fondos y sus tres personajes se superponen en secuencia durante cerca de un segundo. Con movimiento reducido, la entrada usa desplazamientos más cortos.
 
+## Entradas al hacer scroll
+
+Los papeles, las figuras, el texto y los controles se revelan por bloques al acercarse a la ventana. Cada bloque entra una vez, con un recorrido más corto en móvil. La preferencia de movimiento reducido usa solo un fundido breve. Con `movimiento=0`, los bloques se muestran directamente.
+
 ## Descripción
 
 La sección `#descripcion` aparece después de las tres variantes de Portada. Usa el recorte de la modelo pelirroja en cuclillas y explica la personalización de remeras, la sublimación y el DTF. La modelo sube y baja suavemente y se amplía al pasarle el mouse por encima. Su maquetación está en `src/Description.tsx` y `src/description.css`.
@@ -71,9 +75,13 @@ El script verifica el alfa, recorta márgenes transparentes, conserva la proporc
 Para ver las guías en desarrollo, abrir `/?calibrar=neutra#probador`. Los valores `mirada` y `reaccion` muestran la cabeza baja con las manos en los bolsillos y la pose con los brazos levantados, respectivamente. Al elegir o volver a tocar una estampa se ve la reacción y, al terminar, se recupera la pose de calibración. `src/features/probador/artwork.ts` define las zonas. El selector usa `centro` y `pechoDerecho` queda preparada para una estampa chica en el pecho derecho de la modelo.
 
 
-El probador aplica los ajustes guardados de cada estampa. El panel **Ajustar estampa** está oculto en esta versión. Para una nueva calibración, se puede habilitar en desarrollo desde `showStampAdjuster` en `src/features/probador/StampExperience.tsx`.
+El probador aplica los ajustes guardados de cada estampa. El panel **Ajustar estampa** aparece en el servidor local de desarrollo. Elegí una estampa, ajustá la posición y el tamaño y pulsá **Guardar** para conservar los cambios de ese modelo.
 
 El selector **Mujer / Hombre / Niño** usa el estilo de papel de la portada. Al pasar entre Mujer y Hombre se conserva la estampa activa. La URL `/?modelo=hombre#probador` abre el modelo masculino. Los ajustes se guardan por modelo en `ajustes.json` y `ajustes-hombre.json`.
+
+### Capas de la reacción del probador
+
+El frente y los pliegues de la remera provienen siempre del retrato neutro. La remera negra recupera las fotos y la secuencia de la versión estable del probador. Sus máscaras de frente tienen un borde suave para unir los hombros fijos con las mangas y evitar cortes en la cintura. En las blancas, los hombros salen del retrato neutro y se funden con la parte móvil de las mangas. Cada retrato blanco tiene un fotograma de parpadeo propio y el navegador muestra únicamente la zona de los párpados. La estampa usa una capa propia con la misma posición y el mismo tamaño durante toda la reacción. Las mangas, los brazos y los dedos cambian en capas aparte. En las remeras blancas, `--white-front` fija el frente y las capas `tryon-white-arms` y `tryon-white-fingers` incorporan el gesto desde la foto de agarre. El orden compartido por los dos colores es mirar hacia abajo, levantar los brazos para tomar la remera, soltarlos y volver a la mirada inicial. El parpadeo tiene su propia capa y se pausa durante el gesto. Para revisar nuevas variantes, compará el pecho y la estampa antes y durante la reacción y comprobá que solo se muevan las zonas previstas.
 
 
 ## Redes sociales · El muro social

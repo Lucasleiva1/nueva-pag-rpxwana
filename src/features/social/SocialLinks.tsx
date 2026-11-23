@@ -24,7 +24,7 @@ const icons = {
 
 export function SocialLinks() {
   return (
-    <nav className="social-wall__profiles" aria-label="Perfiles sociales de ROXWANA">
+    <nav className="social-wall__profiles" data-scroll-reveal="0" data-reveal-delay="100" aria-label="Perfiles sociales de ROXWANA">
       {visibleSocialProfiles.map((network) => (
         <a key={network} href={socialProfiles[network]} target="_blank" rel="noopener noreferrer"
           aria-label={network} title={network} className="social-wall__profile" data-network={network}>

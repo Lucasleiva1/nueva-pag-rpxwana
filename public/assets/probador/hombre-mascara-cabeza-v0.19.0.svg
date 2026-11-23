@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none">
+  <defs>
+    <filter id="feather" x="-10" y="-10" width="120" height="120" filterUnits="userSpaceOnUse">
+      <feGaussianBlur stdDeviation=".65 .28" />
+    </filter>
+    <linearGradient id="neck" x1="0" y1="29" x2="0" y2="36.7" gradientUnits="userSpaceOnUse">
+      <stop offset="69%" stop-color="white" />
+      <stop offset="100%" stop-color="white" stop-opacity="0" />
+    </linearGradient>
+  </defs>
+  <path d="M-6 -6 H106 V28 H64 Q61 28 60.8 30 Q61 32 61.8 34 L62 38 H41 L42 34 Q42.4 32 41 31 Q39 28 35 28 H-6 Z"
+    fill="url(#neck)" filter="url(#feather)" />
+</svg>

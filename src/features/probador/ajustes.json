@@ -30,9 +30,9 @@
     "scale": 100
   },
   "jurassic-park": {
-    "x": 4,
-    "y": -32,
-    "scale": 100
+    "x": 1,
+    "y": -68,
+    "scale": 86
   },
   "ac-dc": {
     "x": 11,
@@ -43,5 +43,75 @@
     "x": 3,
     "y": -69,
     "scale": 100
+  },
+  "malvinas-argentinas": {
+    "x": 6,
+    "y": -59,
+    "scale": 87
+  },
+  "los-popes": {
+    "x": 6,
+    "y": -74,
+    "scale": 95
+  },
+  "popes-pecho": {
+    "x": 0,
+    "y": -16,
+    "scale": 120
+  },
+  "messi": {
+    "x": 7,
+    "y": -82,
+    "scale": 64
+  },
+  "olmedo": {
+    "x": 7,
+    "y": -71,
+    "scale": 110
+  },
+  "rastrojero": {
+    "x": 8,
+    "y": -56,
+    "scale": 90
+  },
+  "shinobu": {
+    "x": 8,
+    "y": -71,
+    "scale": 100
+  },
+  "rolling-stones": {
+    "x": 0,
+    "y": 0,
+    "scale": 115
+  },
+  "itadori": {
+    "x": 0,
+    "y": 0,
+    "scale": 109
+  },
+  "satoru": {
+    "x": 0,
+    "y": -24,
+    "scale": 116
+  },
+  "plan-4": {
+    "x": 2,
+    "y": -85,
+    "scale": 86
+  },
+  "horcas": {
+    "x": 7,
+    "y": -77,
+    "scale": 94
+  },
+  "bts": {
+    "x": 4,
+    "y": -68,
+    "scale": 85
+  },
+  "primus": {
+    "x": 13,
+    "y": -45,
+    "scale": 83
   }
 }

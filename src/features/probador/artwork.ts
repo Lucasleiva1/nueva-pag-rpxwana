@@ -1,6 +1,16 @@
 import { defaultAdjustment, type Adjustment } from './adjustments'
 
 const folder = import.meta.env.BASE_URL + 'assets/probador/'
+
+function whiteBlink(model: ModelId): BlinkArt {
+  return { image: folder + model + '-blanca-parpadeo-v0.19.0.webp', left: 0, top: 0, width: 100 }
+}
+
+function whiteFrames(model: ModelId, headFrame?: string): Frames {
+  const prefix = folder + model + '-blanca-'
+  const reaction = prefix + 'reaccion-v0.19.0.webp'
+  return { neutra: prefix + 'neutra-v0.19.0.webp', mirada: headFrame ?? reaction, reaccion: reaction }
+}
 export const backdrop = folder + 'pared-probador-v0.10.0.webp'
 
 export type Pose = 'neutra' | 'mirada' | 'reaccion'
@@ -9,12 +19,14 @@ export type ModelId = (typeof modelIds)[number]
 export type Frames = Record<Pose, string>
 
 type Zone = { x: number; y: number; width: number; height: number; rotation: number }
-type PrintPosition = 'centro' | 'pechoDerecho'
+export type PrintPosition = 'centro' | 'pechoDerecho'
 export type BlinkArt = { image: string; left: number; top: number; width: number }
 type ModelArt = {
   label: string
   frames: Frames
+  whiteFrames: Frames
   blink: BlinkArt
+  whiteBlink: BlinkArt
   portraitRatio: number
   printZones: Record<PrintPosition, Zone>
   chest: Omit<Zone, 'rotation'>
@@ -23,6 +35,8 @@ type ModelArt = {
 export const models: Record<ModelId, ModelArt> = {
   mujer: {
     label: 'Mujer',
+    whiteFrames: whiteFrames('mujer'),
+    whiteBlink: whiteBlink('mujer'),
     frames: {
       neutra: folder + 'modelo-neutra-v0.10.0.webp',
       mirada: folder + 'modelo-mirada-v0.10.0.webp',
@@ -38,6 +52,8 @@ export const models: Record<ModelId, ModelArt> = {
   },
   hombre: {
     label: 'Hombre',
+    whiteFrames: whiteFrames('hombre'),
+    whiteBlink: whiteBlink('hombre'),
     frames: {
       neutra: folder + 'hombre-neutra-v0.11.0.webp',
       mirada: folder + 'hombre-mirada-v0.11.0.webp',
@@ -53,6 +69,8 @@ export const models: Record<ModelId, ModelArt> = {
   },
   nino: {
     label: 'Niño',
+    whiteFrames: whiteFrames('nino', folder + 'nino-blanca-mirada-v0.19.0.webp'),
+    whiteBlink: whiteBlink('nino'),
     frames: {
       neutra: folder + 'nino-neutro-v0.17.0.webp',
       mirada: folder + 'nino-mirada-v0.17.0.webp',

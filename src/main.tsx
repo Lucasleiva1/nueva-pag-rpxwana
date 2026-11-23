@@ -365,9 +365,9 @@ function App() {
     <>
       <main>
         <Hero key={mode} mode={mode} motionEnabled={motionEnabled} onSceneChange={selectScene} />
-        <Description onReadingChange={music.setNarrating} />
-        <StampExperience />
-        <SocialWall />
+        <Description motionEnabled={motionEnabled} onReadingChange={music.setNarrating} />
+        <StampExperience motionEnabled={motionEnabled} />
+        <SocialWall motionEnabled={motionEnabled} />
       </main>
       <SiteFooter motionEnabled={motionEnabled} toggleMotion={toggleMotion} />
       <WhatsAppLink />
