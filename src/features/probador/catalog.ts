@@ -7,19 +7,25 @@ export type Stamp = {
   thumb: string
   position: PrintPosition
   lightInk?: boolean
+  whiteArt?: string
+  blackOnly?: boolean
 }
 
 const files = import.meta.glob<string>(['./estampas/*.{webp,png,avif}', './estampas/infantil/*.{webp,png,avif}'], { eager: true, query: '?url&no-inline', import: 'default' })
 const thumbs = import.meta.glob<string>(['./miniaturas/*.webp', './miniaturas/infantil/*.webp'], { eager: true, query: '?url&no-inline', import: 'default' })
+const whiteVersions = import.meta.glob<string>('./variantes-blanca/*-blanca-v0.20.1.svg', { eager: true, query: '?url&no-inline', import: 'default' })
 const adultVersions = new Map<string, { version: string; stamp: Stamp }>()
 const childVersions = new Map<string, { version: string; stamp: Stamp }>()
-type StampDetails = { title?: string; models?: readonly ModelId[]; position?: PrintPosition; lightInk?: boolean }
+type StampDetails = { title?: string; models?: readonly ModelId[]; position?: PrintPosition; lightInk?: boolean; blackOnly?: boolean }
 
 const details: Record<string, StampDetails> = {
   'ac-dc': { title: 'AC/DC' },
+  megadeth: { blackOnly: true },
+  pappo: { blackOnly: true },
+  slipknot: { blackOnly: true },
   'spider-man': { title: 'Spider-Man' },
   'lilo-y-stitch': { title: 'Lilo y Stitch' },
-  rastrojero: { models: ['mujer', 'nino'] },
+  rastrojero: { models: ['mujer', 'hombre', 'nino'] },
   shinobu: { models: ['mujer', 'nino'] },
   satoru: { title: 'Satoru Gojo', models: ['mujer', 'nino'] },
   itadori: { title: 'Yuji Itadori', models: ['mujer', 'nino'] },
@@ -34,7 +40,7 @@ const details: Record<string, StampDetails> = {
   horcas: { lightInk: true },
   messi: { models: ['mujer', 'hombre', 'nino'] },
   ibanez: { title: 'Ibanez', lightInk: true },
-  guason: { title: 'El Guasón' },
+  guason: { title: 'El Guasón', blackOnly: true },
   bts: { title: 'BTS', models: ['mujer', 'hombre', 'nino'] },
 }
 
@@ -54,6 +60,8 @@ for (const [path, src] of Object.entries(files)) {
       title: stampDetails?.title ?? id.split('-').map(word => word[0].toUpperCase() + word.slice(1)).join(' '),
       src,
       lightInk: stampDetails?.lightInk,
+      whiteArt: whiteVersions[`./variantes-blanca/${id}-blanca-v0.20.1.svg`],
+      blackOnly: stampDetails?.blackOnly,
       position: stampDetails?.position ?? 'centro',
       thumb: thumbs['./miniaturas/' + relative.replace(/\.[^.]+$/, '.webp')] ?? src,
     },

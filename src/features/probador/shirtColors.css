@@ -118,45 +118,59 @@
 
 .tryon-model[data-shirt="blanca"] .tryon-print img[data-ink="clara"] { filter: brightness(0); }
 
-.tryon-shirt-picker {
-  display: flex;
-  flex-wrap: wrap;
-  gap: .5rem;
-  margin-top: 1rem;
+.tryon-options button[data-white-art] { background: #f3ebdf; }
+.tryon-options button[data-white-art][aria-pressed="true"] {
+  border-color: #b32d46;
+  box-shadow: inset 0 0 0 2px #b32d46;
 }
 
-.tryon-shirt-picker button {
-  display: inline-flex;
-  align-items: center;
-  gap: .42rem;
-  min-height: 2.75rem;
-  padding: .35rem .65rem;
-  border: 1px solid #e8cdd56a;
-  border-radius: .3rem;
-  background: #221b24;
-  color: var(--tryon-paper);
-  font: 700 .9rem/1 "Barlow", sans-serif;
+.tryon-pickers { width: fit-content; max-width: 100%; }
+.tryon-pickers h3 {
+  margin: .85rem 0 .35rem;
+  text-align: center;
+  text-transform: uppercase;
+  font: italic 900 clamp(1.2rem, 2vw, 1.7rem) / 1 "Barlow Condensed", Impact, sans-serif;
+}
+
+.tryon-shirt-picker {
+  display: flex;
+  justify-content: center;
+  gap: .65rem;
+}
+
+.tryon-shirt-button {
+  display: grid;
+  place-items: center;
+  width: 3.75rem;
+  min-height: 3.75rem;
+  padding: .15rem;
+  border: 0;
+  background: transparent;
   cursor: pointer;
   touch-action: manipulation;
 }
 
-.tryon-shirt-picker button[aria-pressed="true"] {
-  border-color: #ffd7da;
-  background: #572631;
+.tryon-shirt-button svg {
+  width: 3.1rem;
+  height: 3.1rem;
+  overflow: visible;
+  fill: #141116;
+  stroke: #f1e4d0;
+  stroke-width: .85;
+  stroke-linejoin: round;
+  filter: drop-shadow(0 2px 2px #140c17c9);
+  transition: transform .16s ease, filter .16s ease;
 }
-
-.tryon-shirt-picker button:focus-visible {
-  outline: 2px solid #ffe5ce;
-  outline-offset: 2px;
+.tryon-shirt-button[data-color="blanca"] svg { fill: #fff8ee; stroke: #332a2f; }
+.tryon-shirt-button .tryon-shirt-seam { fill: none; }
+.tryon-shirt-button[aria-pressed="true"] svg {
+  filter: drop-shadow(0 2px 2px #140c17c9) drop-shadow(0 0 3px #f39aa9);
 }
-
-.tryon-shirt-picker button::before {
-  content: "";
-  width: .84rem;
-  height: .84rem;
-  border: 1px solid #f1e4d0a8;
-  border-radius: 50%;
-  background: #17151a;
+.tryon-shirt-button:focus-visible { outline: 2px solid #f1e4d0; outline-offset: 2px; }
+@media (hover: hover) {
+  .tryon-shirt-button:hover svg { transform: translateY(-2px) scale(1.08); }
 }
-
-.tryon-shirt-picker button[data-color="blanca"]::before { background: #f7f4ed; }
+.tryon-shirt-button:active svg { transform: scale(.96); }
+@media (prefers-reduced-motion: reduce) {
+  .tryon-shirt-button svg { transition: none; }
+}

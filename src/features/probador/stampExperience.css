@@ -252,19 +252,39 @@
 }
 
 .tryon-adjuster {
-  min-width: 0;
-  width: min(100%, 12.1rem);
-  align-self: end;
+  --tryon-paper: #f1e4d0;
+  --tryon-accent: #eb6671;
+  position: fixed;
+  z-index: 100;
+  left: .75rem;
+  bottom: max(.75rem, env(safe-area-inset-bottom));
+  width: min(12.1rem, calc(100% - 1.5rem));
+  max-height: calc(100dvh - 1.5rem);
+  overflow: auto;
   padding: .65rem .8rem .55rem;
   border: 1px solid #f1e4d05c;
   border-radius: .4rem;
-  background: #201820eb;
+  background: #201820;
+  box-shadow: 0 .55rem 1.6rem #100912a6;
   color: var(--tryon-paper);
   font-size: .82rem;
   line-height: 1.3;
 }
 .tryon-adjuster h3 { margin: 0; font-size: .95rem; }
-.tryon-adjuster > p { margin-top: .25rem; }
+#tryon-adjuster-body > p { margin-top: .25rem; }
+.tryon-adjuster-header { display: flex; align-items: center; gap: .4rem; }
+.tryon-adjuster-grip { flex: 1; cursor: grab; touch-action: none; user-select: none; padding-block: .45rem; }
+.tryon-adjuster-grip:active { cursor: grabbing; }
+.tryon-adjuster-toggle {
+  width: 2rem;
+  min-height: 2rem;
+  border: 1px solid #f1e4d05c;
+  border-radius: .25rem;
+  color: inherit;
+  background: #512431;
+  font-size: 1rem;
+  cursor: pointer;
+}
 .tryon-adjuster fieldset { margin: .5rem 0 0; padding: 0; border: 0; min-width: 0; }
 .tryon-adjuster fieldset:disabled { opacity: .52; }
 .tryon-scale {
@@ -308,19 +328,10 @@
   cursor: pointer;
 }
 .tryon-save:disabled { opacity: .52; cursor: default; }
+.tryon-adjuster-toggle:focus-visible,
 .tryon-lever-knob:focus-visible,
 .tryon-save:focus-visible { outline: 2px solid var(--tryon-paper); outline-offset: 2px; }
 .tryon-adjuster-status { min-height: 1.15em; }
-@media (min-width: 851px) {
-  .tryon-layout-dev { grid-template-rows: minmax(0, 1fr) auto; }
-  .tryon-layout-dev .tryon-stage { grid-area: 1 / 2 / 3; }
-  .tryon-layout-dev .tryon-catalog { grid-area: 1 / 3 / 3; }
-  .tryon-adjuster { grid-area: 2 / 1; }
-}
-@media (max-width: 850px) {
-  .tryon-adjuster { grid-column: 1 / -1; }
-}
-
 .tryon-model-picker {
   display: flex;
   flex-wrap: wrap;

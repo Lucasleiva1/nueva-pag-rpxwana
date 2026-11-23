@@ -34,8 +34,8 @@ export function StampExperience({ motionEnabled }: { motionEnabled: boolean }) {
   const model = models[modelId]
   const isWhite = shirtColor === 'blanca'
   const frames = isWhite ? model.whiteFrames : model.frames
-  const catalog = stampsByModel[modelId]
-  const { view, message, select, prepareReaction, resetPose } = useStampReaction(frames)
+  const catalog = stampsByModel[modelId].filter(stamp => !isWhite || !stamp.blackOnly)
+  const { view, message, select, prepareReaction, resetPose } = useStampReaction(frames, catalog[0] ?? null)
   const editor = usePrintAdjustments(modelId)
   const pose: Pose = view.pose ?? calibration ?? 'neutra'
   const lookingDown = view.lookingDown || (view.pose === null && calibration !== null && calibration !== 'neutra')
@@ -57,7 +57,7 @@ export function StampExperience({ motionEnabled }: { motionEnabled: boolean }) {
 
   const chooseShirt = (color: ShirtColor) => {
     if (color === shirtColor) return
-    resetPose(false)
+    resetPose(color === 'blanca' && view.stamp?.blackOnly === true)
     setShirtColor(color)
   }
 
@@ -80,26 +80,32 @@ export function StampExperience({ motionEnabled }: { motionEnabled: boolean }) {
   return (
     <section id="probador" className="tryon" ref={section} aria-labelledby="tryon-title">
       <img src={backdrop} className="tryon-backdrop" loading="lazy" decoding="async" alt="" />
-      <div className={showStampAdjuster ? "tryon-layout tryon-layout-dev" : "tryon-layout"}>
+      <div className="tryon-layout">
         <header className="tryon-heading" data-scroll-reveal="-38">
           <h2 id="tryon-title">Cambiá <span>la estampa</span></h2>
           <p>Elegí uno de nuestros diseños y mirá cómo queda.</p>
-          <div className="tryon-model-picker" role="group" aria-label="Modelo del probador">
-            {modelIds.map(id => (
-              <button type="button" key={id} className={'poster poster-' + modelPosterColors[id]}
-                aria-pressed={modelId === id} onClick={() => chooseModel(id)}>
-                {models[id].label}
-              </button>
-            ))}
-          </div>
-          <div className="tryon-shirt-picker" role="group" aria-label="Color de la remera">
-            {shirtColors.map(color => (
-              <button key={color} type="button" data-color={color}
-                aria-label={'Remera ' + color} aria-pressed={shirtColor === color}
-                onClick={() => chooseShirt(color)}>
-                {color === 'negra' ? 'Negra' : 'Blanca'}
-              </button>
-            ))}
+          <div className="tryon-pickers">
+            <div className="tryon-model-picker" role="group" aria-label="Modelo del probador">
+              {modelIds.map(id => (
+                <button type="button" key={id} className={'poster poster-' + modelPosterColors[id]}
+                  aria-pressed={modelId === id} onClick={() => chooseModel(id)}>
+                  {models[id].label}
+                </button>
+              ))}
+            </div>
+            <h3 id="tryon-color-title">Color</h3>
+            <div className="tryon-shirt-picker" role="group" aria-labelledby="tryon-color-title">
+              {shirtColors.map(color => (
+                <button key={color} type="button" className="tryon-shirt-button"
+                  data-color={color} aria-label={'Remera ' + color} aria-pressed={shirtColor === color}
+                  onClick={() => chooseShirt(color)}>
+                  <svg viewBox="0 0 32 32" aria-hidden="true">
+                    <path d="M11 4 3.8 8.2 1 14l6.8 3.1 1.6-2.5V28h13.2V14.6l1.6 2.5L31 14l-2.8-5.8L21 4a5 5 0 0 1-10 0Z" />
+                    <path d="M10.7 4.4a5.4 5.4 0 0 0 10.6 0" className="tryon-shirt-seam" />
+                  </svg>
+                </button>
+              ))}
+            </div>
           </div>
         </header>
 
@@ -148,7 +154,7 @@ export function StampExperience({ motionEnabled }: { motionEnabled: boolean }) {
               transform: 'rotate(' + zone.rotation + 'deg)',
             }}>
               <div className="tryon-print">
-                {view.stamp && <img src={view.stamp.src} alt={'Estampa ' + view.stamp.title}
+                {view.stamp && <img src={(isWhite && view.stamp.whiteArt) || view.stamp.src} alt={'Estampa ' + view.stamp.title}
                   data-ink={view.stamp.lightInk ? 'clara' : undefined} draggable={false} />}
               </div>
             </div>
@@ -190,9 +196,10 @@ export function StampExperience({ motionEnabled }: { motionEnabled: boolean }) {
                   type="button"
                   title={stamp.title}
                   aria-pressed={view.stamp?.id === stamp.id}
-                  onClick={() => select(stamp)}
+                  data-white-art={isWhite && !!stamp.whiteArt ? true : undefined}
+                  onClick={() => select(stamp, isWhite ? stamp.whiteArt : undefined)}
                 >
-                  <img src={stamp.thumb} alt={stamp.title} loading="lazy" decoding="async" />
+                  <img src={(isWhite && stamp.whiteArt) || stamp.thumb} alt={stamp.title} loading="lazy" decoding="async" />
                 </button>
               </li>
             ))}
@@ -201,6 +208,7 @@ export function StampExperience({ motionEnabled }: { motionEnabled: boolean }) {
         </div>
         {showStampAdjuster && (
           <StampAdjuster
+            section={section}
             adjustment={adjustment}
             title={view.stamp?.title}
             changes={Object.keys(editor.drafts).length > 0}

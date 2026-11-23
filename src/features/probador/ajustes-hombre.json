@@ -40,13 +40,73 @@
     "scale": 100
   },
   "pink-floyd": {
-    "x": 11,
-    "y": -84,
+    "x": 20,
+    "y": -33,
     "scale": 100
   },
   "pappo": {
     "x": 15,
     "y": -49,
     "scale": 100
+  },
+  "guason": {
+    "x": 25,
+    "y": 13,
+    "scale": 100
+  },
+  "ibanez": {
+    "x": 24,
+    "y": -59,
+    "scale": 97
+  },
+  "plan-4": {
+    "x": 6,
+    "y": -39,
+    "scale": 93
+  },
+  "primus": {
+    "x": 7,
+    "y": -33,
+    "scale": 91
+  },
+  "messi": {
+    "x": 11,
+    "y": -13,
+    "scale": 89
+  },
+  "malvinas-argentinas": {
+    "x": 6,
+    "y": -62,
+    "scale": 91
+  },
+  "popes-pecho": {
+    "x": 5,
+    "y": 65,
+    "scale": 120
+  },
+  "los-popes": {
+    "x": 23,
+    "y": -30,
+    "scale": 96
+  },
+  "horcas": {
+    "x": 18,
+    "y": -30,
+    "scale": 100
+  },
+  "bts": {
+    "x": 21,
+    "y": -62,
+    "scale": 89
+  },
+  "rolling-stones": {
+    "x": 26,
+    "y": 48,
+    "scale": 114
+  },
+  "rastrojero": {
+    "x": 24,
+    "y": -26,
+    "scale": 94
   }
 }

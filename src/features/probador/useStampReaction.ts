@@ -12,8 +12,9 @@ type Print = { stamp: Stamp | null; ratio: number | null }
 type View = Print & { pose: Pose | null; lookingDown: boolean }
 type Ready = { head: boolean; arms: boolean }
 
-export function useStampReaction(frames: Frames) {
-  const printed = useRef<Print>({ stamp: null, ratio: null })
+export function useStampReaction(frames: Frames, initialStamp: Stamp | null) {
+  const firstStamp = useRef(initialStamp).current
+  const printed = useRef<Print>({ stamp: firstStamp, ratio: null })
   const [view, setView] = useState<View>({ ...printed.current, pose: null, lookingDown: false })
   const [message, setMessage] = useState('')
   const serial = useRef(0)
@@ -36,6 +37,20 @@ export function useStampReaction(frames: Frames) {
     serial.current += 1
     window.clearTimeout(timer.current)
   }, [])
+
+  useEffect(() => {
+    if (!firstStamp) return
+    const revision = serial.current
+    void decode(firstStamp.src).then(ratio => {
+      if (revision !== serial.current || printed.current.stamp !== firstStamp) return
+      printed.current = { stamp: firstStamp, ratio }
+      setView(previous => ({ ...previous, ratio }))
+    }).catch(() => {
+      if (revision !== serial.current || printed.current.stamp !== firstStamp) return
+      printed.current = { stamp: null, ratio: null }
+      setView(previous => ({ ...previous, ...printed.current }))
+    })
+  }, [firstStamp])
 
   const playReaction = async (revision: number, replay: boolean) => {
     const ready = await prepareReaction()
@@ -64,11 +79,11 @@ export function useStampReaction(frames: Frames) {
     advance()
   }
 
-  const select = async (stamp: Stamp | null) => {
+  const select = async (stamp: Stamp | null, artSrc = stamp?.src) => {
     const revision = ++serial.current
     const replay = stamp?.id === printed.current.stamp?.id
-    if (!replay) {
-      const ratio = stamp ? await decode(stamp.src).catch(() => null) : null
+    if (!replay || (stamp && printed.current.ratio === null)) {
+      const ratio = artSrc ? await decode(artSrc).catch(() => null) : null
       if (revision !== serial.current) return
       if (stamp && !ratio) {
         setMessage('No se pudo cargar esta estampa.')
