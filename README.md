@@ -38,7 +38,7 @@ Las pistas se asignan por estilo en `sceneTracks` dentro de `src/main.tsx`.
 
 ## Profundidad 2.5D
 
-En escritorio, cada capa sigue el movimiento del mouse con la intensidad de `depth` en `src/heroAssets.ts`. Un valor negativo mueve el fondo en la dirección opuesta. GSAP separa el parallax de las animaciones de entrada. El menú y los puntos de navegación conservan su posición. El parallax está activo de forma predeterminada con mouse en escritorio. La portada muestra el movimiento 2.5D por defecto. La URL `movimiento=0` permite pausarlo durante una revisión. El parallax no se activa con toque. Al entrar en cada escena, sus dos fondos y sus tres personajes se superponen en secuencia durante cerca de un segundo. Con movimiento reducido, la entrada usa desplazamientos más cortos.
+En escritorio, cada capa sigue el movimiento del mouse con la intensidad de `depth` en `src/heroAssets.ts`. Un valor negativo mueve el fondo en la dirección opuesta. GSAP separa el parallax de las animaciones de entrada. El menú y los puntos de navegación conservan su posición. El parallax está activo de forma predeterminada con mouse en escritorio. La portada muestra el movimiento 2.5D por defecto. La URL `movimiento=0` permite pausarlo durante una revisión. En móvil, el parallax responde a gestos sobre los personajes. Al entrar en cada escena, sus dos fondos y sus tres personajes se superponen en secuencia durante cerca de un segundo. Con movimiento reducido, la entrada usa desplazamientos más cortos.
 
 ## Entradas al hacer scroll
 
@@ -53,12 +53,7 @@ El botón **Escuchar** reproduce la descripción completa con el locutor rioplat
 
 ## Movimiento en celular
 
-- En una portada, tocar **Activar movimiento**, aceptar el permiso si aparece y mantener el celular quieto durante la calibración. **Recalibrar** toma una nueva posición de referencia y **Desactivar movimiento** vuelve al control táctil.
-- Deslizar un dedo sobre los personajes permite probar el parallax táctil. Al soltar vuelven al centro. El gesto vertical conserva el scroll del navegador.
-- Los fondos usan dos fotos más recortes de papel animados. Cada personaje tiene su capa. No hay un recorte separado de la mano, de modo que se mueve con el personaje. La salida con ScrollTrigger solo desplaza el fondo de Portada.
-- Abrir desde el teléfono una vista de desarrollo por HTTPS para probar el sensor. Para probar solo los gestos en la misma red, iniciar Vite con `npm run dev -- --host 0.0.0.0` y abrir la dirección de red que muestra Vite. En una URL HTTP de red, el sensor puede estar bloqueado, pero funciona el gesto táctil.
-- Ajustar `mobileDepth` y `delay` en `src/heroAssets.ts`, la sensibilidad en `src/deviceTilt.ts`, y los tamaños y áreas seguras en `src/hero.css` y `src/mobileHero.css`. La inclinación requiere autorización en navegadores que la solicitan. Con movimiento reducido, los gestos y el scroll quedan estáticos, y una activación explícita de inclinación usa un recorrido menor.
-
+El parallax responde al arrastre sobre los personajes. Al soltar, las capas vuelven al centro. El gesto vertical conserva el scroll y se respeta la preferencia de movimiento reducido. Los fondos de la portada también acompañan suavemente el scroll. El encuadre de la portada se adapta al ancho y a la altura visible del celular. Los valores de profundidad se definen en `src/heroAssets.ts` y el encuadre en `src/hero.css` y `src/mobileHero.css`.
 
 ## Probador de estampas
 
@@ -75,7 +70,7 @@ El script verifica el alfa, recorta márgenes transparentes, conserva la proporc
 Para ver las guías en desarrollo, abrir `/?calibrar=neutra#probador`. Los valores `mirada` y `reaccion` muestran la cabeza baja con las manos en los bolsillos y la pose con los brazos levantados, respectivamente. Al elegir o volver a tocar una estampa se ve la reacción y, al terminar, se recupera la pose de calibración. `src/features/probador/artwork.ts` define las zonas. El selector usa `centro` y `pechoDerecho` queda preparada para una estampa chica en el pecho derecho de la modelo.
 
 
-El probador aplica los ajustes guardados de cada estampa. El panel **Ajustar estampa** aparece en el servidor local de desarrollo. Elegí una estampa, ajustá la posición y el tamaño y pulsá **Guardar** para conservar los cambios de ese modelo.
+El probador aplica los ajustes guardados de cada estampa. El panel **Ajustar estampa** está oculto. Para volver a editar posiciones en desarrollo, se puede habilitar desde `showStampAdjuster` en `src/features/probador/StampExperience.tsx`.
 
 El selector **Mujer / Hombre / Niño** usa el estilo de papel de la portada. Al pasar entre Mujer y Hombre se conserva la estampa activa. La URL `/?modelo=hombre#probador` abre el modelo masculino. Los ajustes se guardan por modelo en `ajustes.json` y `ajustes-hombre.json`.
 
@@ -107,7 +102,7 @@ Las tres piezas se generaron con ImageGen integrado. Indicaciones usadas:
 
 El pie `#pie` cierra la página después del Muro Social. Usa el sello original de ROXWANA, dos titulares de papel con la misma base que los botones de Portada, accesos a Instagram y YouTube y un enlace a `#portada`. El texto y los enlaces están en `src/features/footer/SiteFooter.tsx`. La maqueta se adapta a una composición vertical en móvil.
 
-El muro, el papel rojo, el guitarrista y los titulares son capas independientes. GSAP escalona la entrada y aplica distintos desplazamientos según el cursor. En móvil se puede arrastrar sobre la ilustración o activar la inclinación desde los controles del pie. Se usa el mismo ajuste de pausa que en Portada. La activación del sensor se hace en cada escena. Con movimiento reducido, la animación de entrada se omite y la inclinación activada manualmente tiene menor recorrido. El encuadre por encima de las rodillas se aplica en CSS.
+El muro, el papel rojo, el guitarrista y los titulares son capas independientes. GSAP escalona la entrada y aplica distintos desplazamientos según el cursor. En móvil, el efecto responde al arrastre sobre la ilustración. La preferencia de movimiento reducido omite el parallax. El encuadre por encima de las rodillas se aplica en CSS.
 
 Los WebP `pared-urbana-v0.13.0.webp` y `guitarrista-v0.13.0.webp` se guardan en `public/assets/footer/`. La pared y el guitarrista transparente se generaron por separado con ImageGen integrado. Indicaciones de generación:
 

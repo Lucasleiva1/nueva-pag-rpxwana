@@ -16,7 +16,7 @@ const calibration = (() => {
   return pose === 'neutra' || pose === 'mirada' || pose === 'reaccion' ? pose : null
 })()
 
-const showStampAdjuster = import.meta.env.DEV
+const showStampAdjuster = import.meta.env.DEV && false
 
 const shirtColors = ['negra', 'blanca'] as const
 type ShirtColor = (typeof shirtColors)[number]

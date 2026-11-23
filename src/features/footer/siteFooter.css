@@ -200,11 +200,6 @@
   --tilt: 2deg;
 }
 
-.site-footer__motion {
-  margin-top: 23px;
-  max-width: 100%;
-}
-
 .site-footer__copyright {
   margin: clamp(28px, 4vw, 60px) 0 0;
   color: var(--footer-cream);

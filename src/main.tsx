@@ -8,7 +8,6 @@ import { StampExperience } from './features/probador/StampExperience'
 import { SocialWall } from './features/social/SocialWall'
 import { SiteFooter } from './features/footer/SiteFooter'
 import { contactUrl, WhatsAppLink } from './WhatsAppLink'
-import { MobileMotionControls } from './MobileMotionControls'
 import { MOBILE_HERO_QUERY, useMobileHeroMotion } from './useMobileHeroMotion'
 import { useGSAP } from '@gsap/react'
 import { backgrounds as urbanBackgrounds, brand, characters as urbanCharacters, metalBackgrounds, metalCharacters, metalSkull, rapBackgrounds, rapCharacters, NAV_ITEMS } from './heroAssets'
@@ -64,7 +63,7 @@ function Hero({ mode, motionEnabled, onSceneChange }: HeroProps) {
   const [missing, setMissing] = useState<string[]>([])
 
   const introReady = useRef(!motionEnabled)
-  const mobileMotion = useMobileHeroMotion(hero, introReady, motionEnabled)
+  const isMobile = useMobileHeroMotion(hero, introReady, motionEnabled)
 
   useGSAP(() => {
     const section = hero.current
@@ -206,7 +205,7 @@ function Hero({ mode, motionEnabled, onSceneChange }: HeroProps) {
 
   const heroClass = 'hero hero-' + mode +
     (motionEnabled ? ' hero-motion-enabled' : '') +
-    (mobileMotion.isMobile ? ' hero-mobile' : '')
+    (isMobile ? ' hero-mobile' : '')
   return (
     <section id="portada" aria-label="Portada" className={heroClass} ref={hero}>
       <div className="scenery" aria-hidden="true">
@@ -266,9 +265,6 @@ function Hero({ mode, motionEnabled, onSceneChange }: HeroProps) {
         </a>
       </nav>
 
-      {mobileMotion.isMobile && (
-        <MobileMotionControls motion={mobileMotion} enabled={motionEnabled} />
-      )}
       <footer className="hero-footer">
         <div className="scene-arrows" role="group" aria-label="Flechas de portada">
           {previousScene && (
@@ -342,12 +338,6 @@ function App() {
     return () => window.removeEventListener('popstate', readHistory)
   }, [mode])
 
-  const toggleMotion = () => {
-    const enabled = !motionEnabled
-    window.history.replaceState(window.history.state, '', sceneHref(mode, enabled) + window.location.hash)
-    setMotionEnabled(enabled)
-  }
-
   const selectScene = (next: Scene, event: MouseEvent<HTMLAnchorElement>) => {
     if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return
     event.preventDefault()
@@ -369,7 +359,7 @@ function App() {
         <StampExperience motionEnabled={motionEnabled} />
         <SocialWall motionEnabled={motionEnabled} />
       </main>
-      <SiteFooter motionEnabled={motionEnabled} toggleMotion={toggleMotion} />
+      <SiteFooter motionEnabled={motionEnabled} />
       <WhatsAppLink />
       <HeroSound silenced={music.silenced} waitingForInteraction={music.waitingForInteraction}
         toggle={music.toggle} volume={music.volume} setVolume={music.setVolume} />

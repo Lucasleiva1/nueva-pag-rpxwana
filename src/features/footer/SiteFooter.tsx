@@ -3,7 +3,6 @@ import { useGSAP } from '@gsap/react'
 import gsap from 'gsap'
 import { brand } from '../../heroAssets'
 import { useScrollReveal } from '../../useScrollReveal'
-import { MobileMotionControls } from '../../MobileMotionControls'
 import { MOBILE_HERO_QUERY, useMobileHeroMotion } from '../../useMobileHeroMotion'
 import { socialProfiles, visibleSocialProfiles } from '../social/socialCards'
 import './siteFooter.css'
@@ -12,14 +11,13 @@ const art = import.meta.env.BASE_URL + 'assets/footer/'
 
 type Props = {
   motionEnabled: boolean
-  toggleMotion: () => void
 }
 
-export function SiteFooter({ motionEnabled, toggleMotion }: Props) {
+export function SiteFooter({ motionEnabled }: Props) {
   const footer = useRef<HTMLElement>(null)
   useScrollReveal(footer, motionEnabled)
   const introReady = useRef(true)
-  const mobileMotion = useMobileHeroMotion(footer, introReady, motionEnabled, '.site-footer__stage')
+  useMobileHeroMotion(footer, introReady, motionEnabled, '.site-footer__stage')
 
   useEffect(() => {
     if (window.location.hash === '#pie') footer.current?.scrollIntoView()
@@ -119,11 +117,6 @@ export function SiteFooter({ motionEnabled, toggleMotion }: Props) {
           </a>
         </div>
 
-        {mobileMotion.isMobile && (
-          <div className="site-footer__motion">
-            <MobileMotionControls motion={mobileMotion} enabled={motionEnabled} toggleMotion={toggleMotion} />
-          </div>
-        )}
         <p className="site-footer__copyright">© ROXWANA · Identidad, diseño y actitud</p>
       </div>
     </footer>
