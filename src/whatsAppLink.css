@@ -19,6 +19,12 @@
   transition: transform .19s ease, filter .19s ease, box-shadow .19s ease;
 }
 
+@media (max-width: 850px), (max-width: 1024px) and (max-height: 480px) and (any-pointer: coarse) {
+  .whatsapp-link {
+    bottom: calc(104px + env(safe-area-inset-bottom, 0px));
+  }
+}
+
 .whatsapp-link svg {
   width: 65%;
   height: auto;
